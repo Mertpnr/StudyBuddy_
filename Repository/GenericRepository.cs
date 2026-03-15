@@ -1,6 +1,6 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using StudyBuddy.API.DbConnecitionFactory;
+using StudyBuddy.API.DbConnectionFactory;
 using StudyBuddy.API.Repository.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
