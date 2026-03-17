@@ -25,7 +25,6 @@ namespace StudyBuddy.API.Repository
             var keyName = GetKeyColumnName();
 
             string query = $"DELETE FROM {tableName} WHERE {keyName} = @Id";
-
             using (var con = _context.CreateConnection())
             {
                 var results = await con.ExecuteAsync(query, new { Id = obj });
