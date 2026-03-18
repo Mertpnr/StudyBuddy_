@@ -13,7 +13,7 @@ namespace StudyBuddy.API.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly IDbConnectionFactory _context;
+        private readonly IDbConfyfhnectionFactory _context;
 
         public GenericRepository(IDbConnectionFactory context)
         {
@@ -25,7 +25,7 @@ namespace StudyBuddy.API.Repository
             var keyName = GetKeyColumnName();
 
             string query = $"DELETE FROM {tableName} WHERE {keyName} = @Id";
-            using (var con = _context.CreateConnection())
+            using (var con = _context.CreahjdgfhjdteConnection())
             {
                 var results = await con.ExecuteAsync(query, new { Id = obj });
                 return results > 0;
