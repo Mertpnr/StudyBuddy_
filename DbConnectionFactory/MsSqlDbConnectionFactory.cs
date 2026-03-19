@@ -1,16 +1,19 @@
-using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
+using StudyBuddy.API.DbConnecitionFactory;
 using System.Data;
-using System.Data.SqlClient;
 
-namespace StudyBuddy.API.DbConnecitionFactory
+namespace StudyBuddy.API.DbConnectionFactory
 {
     public class MsSqlDbConnectionFactory : IDbConnectionFactory
     {
         private readonly string _connectionString;
-        public MsSqlDbConnectionFactory(IConfiguration connectionString)
+
+        public MsSqlDbConnectionFactory(IConfiguration configuration)
         {
-            _connectionString = connectionString.GetConnectionString("Mssql");
+            _connectionString = configuration.GetConnectionString("Mssql")
+                ?? throw new InvalidOperationException("Connection string 'Mssql' not found.");
         }
+
         public IDbConnection CreateConnection()
         {
             return new SqlConnection(_connectionString);

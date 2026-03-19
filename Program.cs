@@ -1,3 +1,9 @@
+using StudyBuddy.API.DbConnecitionFactory;
+using StudyBuddy.API.DbConnectionFactory;
+using StudyBuddy.API.Repository;
+using StudyBuddy.API.Repository.Interface;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +12,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IDbConnectionFactory, MsSqlDbConnectionFactory>();
+builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
 var app = builder.Build();
 
