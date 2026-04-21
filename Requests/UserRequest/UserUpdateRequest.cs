@@ -3,6 +3,6 @@
     public class UserUpdateRequest : UserBaseRequest
     {
         public int UserId { get; set; }
-        public DateTime? UpdatedDate { get; set; }
     }
 }
+

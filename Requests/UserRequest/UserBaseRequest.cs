@@ -1,7 +1,15 @@
-﻿using StudyBuddy.API.DTOs;
-namespace StudyBuddy.API.Requests.UserRequest
+﻿namespace StudyBuddy.API.Requests.UserRequest
 {
-    public class UserBaseRequest : UserBaseDto
+    public class UserBaseRequest
     {
+        public string NameSurname { get; set; } = string.Empty;
+        public string? Email { get; set; }
+        public string Password { get; set; } = string.Empty;
+        public string? AboutMe { get; set; }
+        public string University { get; set; } = string.Empty;
+        public string? Major { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }
+

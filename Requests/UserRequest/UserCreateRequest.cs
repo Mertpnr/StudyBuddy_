@@ -2,6 +2,6 @@
 {
     public class UserCreateRequest : UserBaseRequest
     {
-        public DateTime? CreatedDate { get; set; }
     }
 }
+
