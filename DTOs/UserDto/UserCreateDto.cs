@@ -1,13 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace StudyBuddy.API.DTOs
+﻿namespace StudyBuddy.API.DTOs.UserDto
 {
     public class UserCreateDto : UserBaseDto
     {
-        public class User
-        {
-            public DateTime CreatedDate { get; set; }
-        }
     }
 }
+
