@@ -1,42 +1,94 @@
-﻿using StudyBuddy.API.Model;
-
+﻿using StudyBuddy.API.DTOs.UserDto;
+using StudyBuddy.API.Model;
 using StudyBuddy.API.Repository.Interface;
+using StudyBuddy.API.Requests.UserRequest;
 using StudyBuddy.API.Services.Interface;
 
-namespace StudyBuddy.API.Service
+namespace StudyBuddy.API.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _repository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository repository)
         {
-            _userRepository = userRepository;
-        }
-        public async Task<bool> DeleteUser(int id)
-        {
-            return await _userRepository.DeleteUser(id);
+            _repository = repository;
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public async Task<List<UserListDto>> GetAllUsersAsync()
         {
-            return await _userRepository.GetAllUsers();
+            var list = await _repository.GetAllUsers();
+
+            return list.Select(x => new UserListDto
+            {
+                UserId = x.UserId,
+                NameSurname = x.NameSurname,
+                Email = x.Email,
+                AboutMe = x.AboutMe,
+                University = x.University,
+                Major = x.Major,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate
+            }).ToList();
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<UserBaseDto?> GetUserByIdAsync(int id)
         {
-            return await _userRepository.GetUserById(id);
+            var entity = await _repository.GetById(id);
+            if (entity == null) return null;
+
+            return new UserBaseDto
+            {
+                NameSurname = entity.NameSurname,
+                Email = entity.Email,
+                AboutMe = entity.AboutMe,
+                University = entity.University,
+                Major = entity.Major,
+                CreatedDate = entity.CreatedDate,
+                UpdatedDate = entity.UpdatedDate
+            };
         }
 
-
-        public async Task<int> InsertUser(User user)
+        public async Task<int> CreateUserAsync(UserCreateRequest request)
         {
-            return await _userRepository.InsertUser(user);
+            var entity = new User
+            {
+                NameSurname = request.NameSurname,
+                Email = request.Email,
+                Password = request.Password,
+                AboutMe = request.AboutMe,
+                University = request.University,
+                Major = request.Major,
+                CreatedDate = request.CreatedDate,
+                UpdatedDate = request.UpdatedDate
+            };
+
+            return await _repository.InsertReturnId(entity);
         }
 
-        public async Task<bool> UpdateUser(User user)
+        public async Task<bool> UpdateUserAsync(UserUpdateRequest request)
         {
-            return await _userRepository.UpdateUser(user);
+            var existing = await _repository.GetById(request.UserId);
+            if (existing == null) return false;
+
+            existing.NameSurname = request.NameSurname;
+            existing.Email = request.Email;
+            existing.Password = request.Password;
+            existing.AboutMe = request.AboutMe;
+            existing.University = request.University;
+            existing.Major = request.Major;
+            existing.CreatedDate = request.CreatedDate;
+            existing.UpdatedDate = request.UpdatedDate;
+
+            return await _repository.Update(existing);
+        }
+
+        public async Task<bool> DeleteUserAsync(int id)
+        {
+            var existing = await _repository.GetById(id);
+            if (existing == null) return false;
+
+            return await _repository.Delete(id);
         }
     }
 }
