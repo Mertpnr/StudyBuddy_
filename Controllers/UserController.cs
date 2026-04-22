@@ -1,68 +1,53 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using StudyBuddy.API.Model;
-using StudyBuddy.API.Repository.Interface;
+﻿using Microsoft.AspNetCore.Mvc;
+using StudyBuddy.API.Requests.UserRequest;
 using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserService _service;
 
-
-        public UserController(IUserService userService)
+        public UserController(IUserService service)
         {
-            _userService = userService;
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            //return _userRepository.GetAllUsers();
-            var a = await _userService.GetAllUsers();
-            return Ok(a);
-
+            _service = service;
         }
 
-        [HttpPost("Create")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> InsertUser([FromForm] User user)
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            int a = await _userService.InsertUser(user);
-            if (a > 0)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-            //return _userRepository.InsertUser(user);
-
+            var list = await _service.GetAllUsersAsync();
+            return Ok(list);
         }
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var deletes = await _userService.DeleteUser(id);
-            return Ok();
 
-        }
         [HttpGet("GetById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var getid = await _userService.GetUserById(id);
-            return Ok(getid);
+            var item = await _service.GetUserByIdAsync(id);
+            return item is null ? NotFound() : Ok(item);
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] UserCreateRequest request)
+        {
+            var id = await _service.CreateUserAsync(request);
+            return Ok(new { id });
         }
 
         [HttpPut("Update")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Update([FromForm] User user)
+        public async Task<IActionResult> Update([FromBody] UserUpdateRequest request)
         {
-            var updated = await _userService.UpdateUser(user);
+            var ok = await _service.UpdateUserAsync(request);
+            return ok ? Ok() : NotFound();
+        }
 
-            return Ok(updated);
+        [HttpDelete("Delete/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var ok = await _service.DeleteUserAsync(id);
+            return ok ? Ok() : NotFound();
         }
     }
 }
