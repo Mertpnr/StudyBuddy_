@@ -1,55 +1,53 @@
 using Microsoft.AspNetCore.Mvc;
-using StudyBuddy.API.Model;
+using StudyBuddy.API.Requests.MatchRequestRequest;
 using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class MatchRequestController : ControllerBase
     {
-        private readonly IMatchRequestService _matchRequestService;
+        private readonly IMatchRequestService _service;
 
-        public MatchRequestController(IMatchRequestService matchRequestService)
+        public MatchRequestController(IMatchRequestService service)
         {
-            _matchRequestService = matchRequestService;
+            _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllMatchRequests()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            var list = await _matchRequestService.GetAllMatchRequests();
+            var list = await _service.GetAllMatchRequestsAsync();
             return Ok(list);
         }
 
-        [HttpGet("GetById")]
+        [HttpGet("GetById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _matchRequestService.GetMatchRequestById(id);
-            return Ok(item);
+            var item = await _service.GetMatchRequestByIdAsync(id);
+            return item is null ? NotFound() : Ok(item);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> InsertMatchRequest(MatchRequest matchRequest)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] MatchRequestCreateRequest request)
         {
-            int id = await _matchRequestService.InsertMatchRequest(matchRequest);
-            if (id > 0)
-                return Ok();
-            return BadRequest();
+            var id = await _service.CreateMatchRequestAsync(request);
+            return Ok(new { id });
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(MatchRequest matchRequest)
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] MatchRequestUpdateRequest request)
         {
-            var updated = await _matchRequestService.UpdateMatchRequest(matchRequest);
-            return Ok(updated);
+            var ok = await _service.UpdateMatchRequestAsync(request);
+            return ok ? Ok() : NotFound();
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _matchRequestService.DeleteMatchRequest(id);
-            return Ok(deleted);
+            var ok = await _service.DeleteMatchRequestAsync(id);
+            return ok ? Ok() : NotFound();
         }
     }
 }
