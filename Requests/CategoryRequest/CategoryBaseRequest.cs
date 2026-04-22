@@ -1,8 +1,7 @@
-﻿using StudyBuddy.DTOs.CategoryDto;
-
-namespace StudyBuddy.API.Requests.CategoryRequest
+﻿namespace StudyBuddy.API.Requests.CategoryRequest
 {
-    public class CategoryBaseRequest : CategoryBaseDto
+    public class CategoryBaseRequest
     {
+        public string CategoryName { get; set; } = string.Empty;
     }
 }
