@@ -1,62 +1,53 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudyBuddy.API.Model;
-using StudyBuddy.API.Service.Interface;
+using StudyBuddy.API.Requests.AnswerRequest;
 using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class AnswersController : ControllerBase
-	{
-		private readonly IAnswerService _answerService;
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AnswersController : ControllerBase
+    {
+        private readonly IAnswerService _service;
 
-		public AnswersController(IAnswerService answerService)
-		{
-			_answerService = answerService;
-		}
+        public AnswersController(IAnswerService service)
+        {
+            _service = service;
+        }
 
-		[HttpGet]
-		public async Task<IActionResult> GetAllAnswers()
-		{
-			var list = await _answerService.GetAllAnswers();
-			return Ok(list);
-		}
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var list = await _service.GetAllAnswersAsync();
+            return Ok(list);
+        }
 
-		[HttpPost]
-		public async Task<IActionResult> InsertAnswer(Answer answer)
-		{
-			int id = await _answerService.InsertAnswer(answer);
-			if (id > 0)
-			{
-				return Ok();
-			}
-			else
-			{
-				return BadRequest();
-			}
-		}
+        [HttpGet("GetById/{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var item = await _service.GetAnswerByIdAsync(id);
+            return item is null ? NotFound() : Ok(item);
+        }
 
-		[HttpDelete]
-		public async Task<IActionResult> Delete(int id)
-		{
-			var deleted = await _answerService.DeleteAnswer(id);
-			// istersen deleted kontrolü ekleyebilirsin
-			return Ok(deleted);
-		}
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] AnswerCreateRequest request)
+        {
+            var id = await _service.CreateAnswerAsync(request);
+            return Ok(new { id });
+        }
 
-		[HttpGet("GetById")]
-		public async Task<IActionResult> GetById(int id)
-		{
-			var answer = await _answerService.GetById(id);
-			return Ok(answer);
-		}
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] AnswerUpdateRequest request)
+        {
+            var ok = await _service.UpdateAnswerAsync(request);
+            return ok ? Ok() : NotFound();
+        }
 
-		[HttpPut]
-		public async Task<IActionResult> Update(Answer answer)
-		{
-			var updated = await _answerService.UpdateAnswer(answer);
-			return Ok(updated);
-		}
-	}
+        [HttpDelete("Delete/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var ok = await _service.DeleteAnswerAsync(id);
+            return ok ? Ok() : NotFound();
+        }
+    }
 }

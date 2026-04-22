@@ -1,61 +1,53 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudyBuddy.API.Model;
+using StudyBuddy.API.Requests.CategoryRequest;
 using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryService _service;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService service)
         {
-            _categoryService = categoryService;
+            _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            var categories = await _categoryService.GetAllCategories();
-            return Ok(categories);
-        }
-
-        [HttpPost("Create")]
-        public async Task<IActionResult> InsertCategory([FromBody] Category category)
-        {
-            int result = await _categoryService.InsertCategory(category);
-
-            if (result > 0)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var deleted = await _categoryService.DeleteCategory(id);
-            return Ok(deleted);
+            var list = await _service.GetAllCategoriesAsync();
+            return Ok(list);
         }
 
         [HttpGet("GetById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var category = await _categoryService.GetCategoryById(id);
-            return Ok(category);
+            var item = await _service.GetCategoryByIdAsync(id);
+            return item is null ? NotFound() : Ok(item);
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] CategoryCreateRequest request)
+        {
+            var id = await _service.CreateCategoryAsync(request);
+            return Ok(new { id });
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] Category category)
+        public async Task<IActionResult> Update([FromBody] CategoryUpdateRequest request)
         {
-            var updated = await _categoryService.UpdateCategory(category);
-            return Ok(updated);
+            var ok = await _service.UpdateCategoryAsync(request);
+            return ok ? Ok() : NotFound();
+        }
+
+        [HttpDelete("Delete/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var ok = await _service.DeleteCategoryAsync(id);
+            return ok ? Ok() : NotFound();
         }
     }
 }
