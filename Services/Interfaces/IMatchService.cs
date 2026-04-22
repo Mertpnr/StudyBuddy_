@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using StudyBuddy.API.Model;
+﻿using StudyBuddy.API.DTOs.MatchDto;
+using StudyBuddy.API.Requests.MatchRequest;
 
 namespace StudyBuddy.API.Services.Interface
 {
-	public interface IMatchService
-	{
-		Task<List<Match>> GetAllMatches();
-		Task<Match> GetMatchById(int id);
-		Task<int> InsertMatch(Match match);
-		Task<bool> UpdateMatch(Match match);
-		Task<bool> DeleteMatch(int id);
-	}
+    public interface IMatchService
+    {
+        Task<List<MatchListDto>> GetAllMatchesAsync();
+        Task<MatchBaseDto?> GetMatchByIdAsync(int id);
+        Task<int> CreateMatchAsync(MatchCreateRequest request);
+        Task<bool> UpdateMatchAsync(MatchUpdateRequest request);
+        Task<bool> DeleteMatchAsync(int id);
+    }
 }
