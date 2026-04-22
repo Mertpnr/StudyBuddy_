@@ -1,15 +1,14 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using StudyBuddy.API.Model;
+using StudyBuddy.API.DTOs.QuestionDto;
+using StudyBuddy.API.Requests.QuestionRequest;
 
 namespace StudyBuddy.API.Services.Interface
 {
     public interface IQuestionService
     {
-        Task<List<Question>> GetAllQuestions();
-        Task<Question> GetQuestionById(int id);
-        Task<int> InsertQuestion(Question question);
-        Task<bool> UpdateQuestion(Question question);
-        Task<bool> DeleteQuestion(int id);
+        Task<List<QuestionListDto>> GetAllQuestionsAsync();
+        Task<QuestionBaseDto?> GetQuestionByIdAsync(int id);
+        Task<int> CreateQuestionAsync(QuestionCreateRequest request);
+        Task<bool> UpdateQuestionAsync(QuestionUpdateRequest request);
+        Task<bool> DeleteQuestionAsync(int id);
     }
 }
