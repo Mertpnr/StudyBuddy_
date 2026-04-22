@@ -1,44 +1,76 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using StudyBuddy.API.DTOs.QuestionDto;
 using StudyBuddy.API.Model;
-using StudyBuddy.API.Repository;
 using StudyBuddy.API.Repository.Interface;
+using StudyBuddy.API.Requests.QuestionRequest;
 using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Services
 {
     public class QuestionService : IQuestionService
     {
-        private readonly IQuestionRepository _questionRepository;
+        private readonly IQuestionRepository _repository;
 
-        public QuestionService(IQuestionRepository questionRepository)
+        public QuestionService(IQuestionRepository repository)
         {
-            _questionRepository = questionRepository;
+            _repository = repository;
         }
 
-        public async Task<bool> DeleteQuestion(int id)
+        public async Task<List<QuestionListDto>> GetAllQuestionsAsync()
         {
-            return await _questionRepository.DeleteQuestion(id);
+            var list = await _repository.GetAll();
+
+            return list.Select(x => new QuestionListDto
+            {
+                QuestionId = x.QuestionId,
+                Question = x.Question1 ?? string.Empty,
+                CategoryId = x.CategoryId,
+                MatchPercent = x.MatchPercent
+            }).ToList();
         }
 
-        public async Task<List<Question>> GetAllQuestions()
+        public async Task<QuestionBaseDto?> GetQuestionByIdAsync(int id)
         {
-            return await _questionRepository.GetAllQuestions();
+            var entity = await _repository.GetById(id);
+            if (entity == null) return null;
+
+            return new QuestionBaseDto
+            {
+                Question = entity.Question1 ?? string.Empty,
+                CategoryId = entity.CategoryId,
+                MatchPercent = entity.MatchPercent
+            };
         }
 
-        public async Task<Question> GetQuestionById(int id)
+        public async Task<int> CreateQuestionAsync(QuestionCreateRequest request)
         {
-            return await _questionRepository.GetQuestionById(id);
+            var entity = new Question
+            {
+                Question1 = request.Question,
+                CategoryId = request.CategoryId,
+                MatchPercent = request.MatchPercent
+            };
+
+            return await _repository.InsertReturnId(entity);
         }
 
-        public async Task<int> InsertQuestion(Question question)
+        public async Task<bool> UpdateQuestionAsync(QuestionUpdateRequest request)
         {
-            return await _questionRepository.InsertQuestion(question);
+            var existing = await _repository.GetById(request.QuestionId);
+            if (existing == null) return false;
+
+            existing.Question1 = request.Question;
+            existing.CategoryId = request.CategoryId;
+            existing.MatchPercent = request.MatchPercent;
+
+            return await _repository.Update(existing);
         }
 
-        public async Task<bool> UpdateQuestion(Question question)
+        public async Task<bool> DeleteQuestionAsync(int id)
         {
-            return await _questionRepository.UpdateQuestion(question);
+            var existing = await _repository.GetById(id);
+            if (existing == null) return false;
+
+            return await _repository.Delete(id);
         }
     }
 }

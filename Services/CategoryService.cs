@@ -1,45 +1,68 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using StudyBuddy.API.Model;
+﻿using StudyBuddy.API.Model;
 using StudyBuddy.API.Repository.Interface;
+using StudyBuddy.API.Requests.CategoryRequest;
 using StudyBuddy.API.Services.Interface;
+using StudyBuddy.DTOs.CategoryDto;
 
 namespace StudyBuddy.API.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryRepository _repository;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository repository)
         {
-            _categoryRepository = categoryRepository;
+            _repository = repository;
         }
 
-        public async Task<List<Category>> GetAllCategories()
+        public async Task<List<CategoryListDto>> GetAllCategoriesAsync()
         {
-            var categories = await _categoryRepository.GetAll();
-            return categories.ToList();
+            var list = await _repository.GetAll();
+
+            return list.Select(x => new CategoryListDto
+            {
+                CategoryId = x.CategoryId,
+                CategoryName = x.CategoryName ?? string.Empty
+            }).ToList();
         }
 
-        public async Task<Category> GetCategoryById(int id)
+        public async Task<CategoryBaseDto?> GetCategoryByIdAsync(int id)
         {
-            return await _categoryRepository.GetById(id);
+            var entity = await _repository.GetById(id);
+            if (entity == null) return null;
+
+            return new CategoryBaseDto
+            {
+                CategoryName = entity.CategoryName ?? string.Empty
+            };
         }
 
-        public async Task<int> InsertCategory(Category category)
+        public async Task<int> CreateCategoryAsync(CategoryCreateRequest request)
         {
-            return await _categoryRepository.InsertReturnId(category);
+            var entity = new Category
+            {
+                CategoryName = request.CategoryName
+            };
+
+            return await _repository.InsertReturnId(entity);
         }
 
-        public async Task<bool> UpdateCategory(Category category)
+        public async Task<bool> UpdateCategoryAsync(CategoryUpdateRequest request)
         {
-            return await _categoryRepository.Update(category);
+            var existing = await _repository.GetById(request.CategoryId);
+            if (existing == null) return false;
+
+            existing.CategoryName = request.CategoryName;
+
+            return await _repository.Update(existing);
         }
 
-        public async Task<bool> DeleteCategory(int id)
+        public async Task<bool> DeleteCategoryAsync(int id)
         {
-            return await _categoryRepository.Delete(id);
+            var existing = await _repository.GetById(id);
+            if (existing == null) return false;
+
+            return await _repository.Delete(id);
         }
     }
 }

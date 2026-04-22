@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using StudyBuddy.API.Model;
+﻿
+using StudyBuddy.API.Requests.CategoryRequest;
+using StudyBuddy.DTOs.CategoryDto;
 
 namespace StudyBuddy.API.Services.Interface
 {
     public interface ICategoryService
     {
-        Task<List<Category>> GetAllCategories();
-        Task<Category> GetCategoryById(int id);
-        Task<int> InsertCategory(Category category);
-        Task<bool> UpdateCategory(Category category);
-        Task<bool> DeleteCategory(int id);
+        Task<List<CategoryListDto>> GetAllCategoriesAsync();
+        Task<CategoryBaseDto?> GetCategoryByIdAsync(int id);
+        Task<int> CreateCategoryAsync(CategoryCreateRequest request);
+        Task<bool> UpdateCategoryAsync(CategoryUpdateRequest request);
+        Task<bool> DeleteCategoryAsync(int id);
     }
 }
