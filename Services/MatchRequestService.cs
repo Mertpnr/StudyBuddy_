@@ -1,47 +1,84 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using StudyBuddy.API.DTOs.MatchRequestDto;
 using StudyBuddy.API.Model;
 using StudyBuddy.API.Repository.Interface;
+using StudyBuddy.API.Requests.MatchRequestRequest;
 using StudyBuddy.API.Services.Interface;
-using StudyBuddy.Repository.Interface;
 
 namespace StudyBuddy.API.Services
 {
     public class MatchRequestService : IMatchRequestService
     {
-        private readonly IMatchRequestRepository _matchRequestRepository;
+        private readonly IMatchRequestRepository _repository;
 
-        public MatchRequestService(IMatchRequestRepository matchRequestRepository)
+        public MatchRequestService(IMatchRequestRepository repository)
         {
-            _matchRequestRepository = matchRequestRepository;
+            _repository = repository;
         }
 
-        public async Task<List<MatchRequest>> GetAllMatchRequests()
+        public async Task<List<MatchRequestListDto>> GetAllMatchRequestsAsync()
         {
-            return await _matchRequestRepository.GetAllMatchRequests();
+            var list = await _repository.GetAll();
+
+            return list.Select(x => new MatchRequestListDto
+            {
+                MatchRequestId = x.MatchRequestId,
+                User1Id = x.User1Id,
+                User2Id = x.User2Id,
+                Status = x.Status,
+                Message = x.Message,
+                CreatedDate = x.CreatedDate
+            }).ToList();
         }
 
-        public async Task<MatchRequest> GetMatchRequestById(int id)
+        public async Task<MatchRequestBaseDto?> GetMatchRequestByIdAsync(int id)
         {
-            return await _matchRequestRepository.GetMatchRequestById(id);
+            var entity = await _repository.GetById(id);
+            if (entity == null) return null;
+
+            return new MatchRequestBaseDto
+            {
+                User1Id = entity.User1Id,
+                User2Id = entity.User2Id,
+                Status = entity.Status,
+                Message = entity.Message,
+                CreatedDate = entity.CreatedDate
+            };
         }
 
-        public async Task<int> InsertMatchRequest(MatchRequest matchRequest)
+        public async Task<int> CreateMatchRequestAsync(MatchRequestCreateRequest request)
         {
-            var id = await _matchRequestRepository.InsertMatchRequest(matchRequest);
-            return id;
+            var entity = new MatchRequest
+            {
+                User1Id = request.User1Id,
+                User2Id = request.User2Id,
+                Status = request.Status,
+                Message = request.Message,
+                CreatedDate = request.CreatedDate
+            };
+
+            return await _repository.InsertReturnId(entity);
         }
 
-        public async Task<bool> UpdateMatchRequest(MatchRequest matchRequest)
+        public async Task<bool> UpdateMatchRequestAsync(MatchRequestUpdateRequest request)
         {
-            var updated = await _matchRequestRepository.UpdateMatchRequest(matchRequest);
-            return updated;
+            var existing = await _repository.GetById(request.MatchRequestId);
+            if (existing == null) return false;
+
+            existing.User1Id = request.User1Id;
+            existing.User2Id = request.User2Id;
+            existing.Status = request.Status;
+            existing.Message = request.Message;
+            existing.CreatedDate = request.CreatedDate;
+
+            return await _repository.Update(existing);
         }
 
-        public async Task<bool> DeleteMatchRequest(int id)
+        public async Task<bool> DeleteMatchRequestAsync(int id)
         {
-            var deleted = await _matchRequestRepository.DeleteMatchRequest(id);
-            return deleted;
+            var existing = await _repository.GetById(id);
+            if (existing == null) return false;
+
+            return await _repository.Delete(id);
         }
     }
 }
