@@ -1,60 +1,53 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudyBuddy.API.Model;
+using StudyBuddy.API.Requests.QuestionRequest;
 using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class QuestionController : ControllerBase
     {
-        private readonly IQuestionService _questionService;
+        private readonly IQuestionService _service;
 
-        public QuestionController(IQuestionService questionService)
+        public QuestionController(IQuestionService service)
         {
-            _questionService = questionService;
+            _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllQuestions()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            var list = await _questionService.GetAllQuestions();
+            var list = await _service.GetAllQuestionsAsync();
             return Ok(list);
         }
 
-        [HttpGet("GetById")]
+        [HttpGet("GetById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var question = await _questionService.GetQuestionById(id);
-            return Ok(question);
+            var item = await _service.GetQuestionByIdAsync(id);
+            return item is null ? NotFound() : Ok(item);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> InsertQuestion([FromBody] Question question)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] QuestionCreateRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _questionService.InsertQuestion(question);
-
-            return Ok();
+            var id = await _service.CreateQuestionAsync(request);
+            return Ok(new { id });
         }
 
-
-        [HttpPut]
-        public async Task<IActionResult> Update(Question question)
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] QuestionUpdateRequest request)
         {
-            var updated = await _questionService.UpdateQuestion(question);
-            return Ok(updated);
+            var ok = await _service.UpdateQuestionAsync(request);
+            return ok ? Ok() : NotFound();
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _questionService.DeleteQuestion(id);
-            return Ok(deleted);
+            var ok = await _service.DeleteQuestionAsync(id);
+            return ok ? Ok() : NotFound();
         }
     }
 }
