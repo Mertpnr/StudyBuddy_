@@ -1,6 +1,6 @@
-﻿namespace StudyBuddy.Requests.CategoryRequest
+﻿namespace StudyBuddy.API.Requests.CategoryRequest
 {
-    public class CategoryCreateRequest
+    public class CategoryCreateRequest : CategoryBaseRequest
     {
     }
 }
