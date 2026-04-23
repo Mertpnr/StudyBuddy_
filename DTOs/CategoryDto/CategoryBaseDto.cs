@@ -1,7 +1,7 @@
-﻿namespace StudyBuddy.DTOs.CategoryDto
+﻿namespace StudyBuddy.API.DTOs.CategoryDto
 {
     public class CategoryBaseDto
     {
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
     }
 }
