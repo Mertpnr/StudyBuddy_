@@ -1,6 +1,8 @@
-﻿namespace StudyBuddy.Repository.Interface
+﻿using StudyBuddy.API.Model;
+namespace StudyBuddy.API.Repository.Interface
+
 {
-    public interface IMatchRequestRepository
+    public interface IMatchRequestRepository : IGenericRepository<MatchRequest, int>
     {
     }
 }
