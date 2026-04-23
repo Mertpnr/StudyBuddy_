@@ -4,6 +4,7 @@ using StudyBuddy.API.Repository;
 using StudyBuddy.API.Repository.Interface;
 using StudyBuddy.API.Services.Interface;
 using StudyBuddy.API.Services;
+using StudyBuddy.Services.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
