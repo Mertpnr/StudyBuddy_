@@ -1,4 +1,4 @@
-﻿namespace StudyBuddy.DTOs.CategoryDto
+﻿namespace StudyBuddy.API.DTOs.CategoryDto
 {
     public class CategoryListDto : CategoryBaseDto
     {
