@@ -1,6 +1,5 @@
-﻿
+﻿using StudyBuddy.API.DTOs.CategoryDto;
 using StudyBuddy.API.Requests.CategoryRequest;
-using StudyBuddy.DTOs.CategoryDto;
 
 namespace StudyBuddy.API.Services.Interface
 {

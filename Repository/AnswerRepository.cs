@@ -1,3 +1,4 @@
+using Dapper;
 using StudyBuddy.API.DbConnectionFactory;
 using StudyBuddy.API.Model;
 using StudyBuddy.API.Repository.Interface;

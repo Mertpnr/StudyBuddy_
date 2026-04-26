@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace StudyBuddy.API.DbConnecitionFactory
+namespace StudyBuddy.API.DbConnectionFactory
 {
     public interface IDbConnectionFactory
     {
