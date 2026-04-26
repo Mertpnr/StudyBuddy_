@@ -1,6 +1,6 @@
 using Dapper;
 using StudyBuddy.API.DbConnectionFactory;
-using StudyBuddy.API.DTOs.MatchDto;
+using StudyBuddy.API.DTOs.MatchingDto;
 using StudyBuddy.API.Model;
 using StudyBuddy.API.Repository.Interface;
 

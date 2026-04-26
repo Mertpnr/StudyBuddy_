@@ -3,7 +3,7 @@ using StudyBuddy.API.Enums;
 using StudyBuddy.API.Model;
 using StudyBuddy.API.Repository.Interface;
 using StudyBuddy.API.Requests.MatchingRequest;
-using StudyBuddy.Services.Interfaces;
+using StudyBuddy.API.Services.Interface;
 
 namespace StudyBuddy.API.Services
 {

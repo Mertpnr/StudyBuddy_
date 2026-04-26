@@ -62,7 +62,7 @@ namespace StudyBuddy.API.Services
             existing.OptionId = request.OptionId;
             existing.UserId = request.UserId;
 
-            return await _repository.UpdateAnswer(existing);
+            return await _repository.Update(existing);
         }
 
         public async Task<bool> DeleteAnswerAsync(int id)

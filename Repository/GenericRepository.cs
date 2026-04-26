@@ -1,5 +1,4 @@
 using Dapper;
-using StudyBuddy.API.DbConnecitionFactory;
 using StudyBuddy.API.DbConnectionFactory;
 using StudyBuddy.API.Repository.Interface;
 using System.ComponentModel.DataAnnotations;

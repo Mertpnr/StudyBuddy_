@@ -17,7 +17,7 @@ namespace StudyBuddy.API.Services
 
         public async Task<List<UserListDto>> GetAllUsersAsync()
         {
-            var list = await _repository.GetAllUsers();
+            var list = await _repository.GetAll();
 
             return list.Select(x => new UserListDto
             {
@@ -41,6 +41,7 @@ namespace StudyBuddy.API.Services
             {
                 NameSurname = entity.NameSurname,
                 Email = entity.Email,
+                Password = entity.Password,
                 AboutMe = entity.AboutMe,
                 University = entity.University,
                 Major = entity.Major,
@@ -54,13 +55,13 @@ namespace StudyBuddy.API.Services
             var entity = new User
             {
                 NameSurname = request.NameSurname,
-                Email = request.Email,
+                Email = request.Email ?? string.Empty,
                 Password = request.Password,
-                AboutMe = request.AboutMe,
+                AboutMe = request.AboutMe ?? string.Empty,
                 University = request.University,
-                Major = request.Major,
+                Major = request.Major ?? string.Empty,
                 CreatedDate = request.CreatedDate,
-                UpdatedDate = request.UpdatedDate
+                UpdatedDate = request.UpdatedDate ?? DateTime.Now
             };
 
             return await _repository.InsertReturnId(entity);
@@ -72,13 +73,12 @@ namespace StudyBuddy.API.Services
             if (existing == null) return false;
 
             existing.NameSurname = request.NameSurname;
-            existing.Email = request.Email;
+            existing.Email = request.Email ?? string.Empty;
             existing.Password = request.Password;
-            existing.AboutMe = request.AboutMe;
+            existing.AboutMe = request.AboutMe ?? string.Empty;
             existing.University = request.University;
-            existing.Major = request.Major;
-            existing.CreatedDate = request.CreatedDate;
-            existing.UpdatedDate = request.UpdatedDate;
+            existing.Major = request.Major ?? string.Empty;
+            existing.UpdatedDate = request.UpdatedDate ?? DateTime.Now;
 
             return await _repository.Update(existing);
         }

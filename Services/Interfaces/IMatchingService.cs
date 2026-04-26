@@ -1,10 +1,10 @@
 ﻿using StudyBuddy.API.DTOs.MatchingDto;
 using StudyBuddy.API.Requests.MatchingRequest;
 
-namespace StudyBuddy.Services.Interfaces
+namespace StudyBuddy.API.Services.Interface
 {
-	public interface IMatchingService
-	{
-		Task<MatchResultDto> CalculateMatchAsync(CalculateMatchRequest request);
-	}
+    public interface IMatchingService
+    {
+        Task<MatchResultDto> CalculateMatchAsync(CalculateMatchRequest request);
+    }
 }

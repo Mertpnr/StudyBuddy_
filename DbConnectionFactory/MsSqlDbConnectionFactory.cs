@@ -1,5 +1,4 @@
 using Microsoft.Data.SqlClient;
-using StudyBuddy.API.DbConnecitionFactory;
 using System.Data;
 
 namespace StudyBuddy.API.DbConnectionFactory
