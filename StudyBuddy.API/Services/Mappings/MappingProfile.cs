@@ -46,7 +46,6 @@ namespace StudyBuddy.API.Services.Mappings
             CreateMap<Option, OptionUpdateRequest>().ReverseMap();
 
             // Question
-            // Your model property is Question, not Question1
             CreateMap<Question, QuestionBaseDto>().ReverseMap();
             CreateMap<Question, QuestionListDto>().ReverseMap();
             CreateMap<Question, QuestionCreateRequest>().ReverseMap();
@@ -65,11 +64,21 @@ namespace StudyBuddy.API.Services.Mappings
             CreateMap<MatchRequest, MatchRequestUpdateRequest>().ReverseMap();
 
             // User
-            // Current database/model uses Password, not PasswordHash
             CreateMap<User, UserBaseDto>().ReverseMap();
             CreateMap<User, UserListDto>().ReverseMap();
-            CreateMap<User, UserCreateRequest>().ReverseMap();
-            CreateMap<User, UserUpdateRequest>().ReverseMap();
+
+            CreateMap<UserCreateRequest, User>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserGuid, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+
+            CreateMap<UserUpdateRequest, User>()
+                .ForMember(dest => dest.UserGuid, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
         }
     }
 }
