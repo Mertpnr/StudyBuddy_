@@ -26,6 +26,15 @@ namespace StudyBuddy.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetUserByIdAsync(id);
+
+            return item is null ? NotFound() : Ok(item);
+        }
+
+        [HttpGet("GetByGuid/{userGuid:guid}")]
+        public async Task<IActionResult> GetByGuid(Guid userGuid)
+        {
+            var item = await _service.GetUserByGuidAsync(userGuid);
+
             return item is null ? NotFound() : Ok(item);
         }
 
@@ -33,21 +42,32 @@ namespace StudyBuddy.API.Controllers
         public async Task<IActionResult> Create([FromBody] UserCreateRequest request)
         {
             var id = await _service.CreateUserAsync(request);
-            return Ok(new { id });
+
+            return Ok(new
+            {
+                Message = "User created successfully.",
+                UserId = id
+            });
         }
 
         [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] UserUpdateRequest request)
         {
             var ok = await _service.UpdateUserAsync(request);
-            return ok ? Ok() : NotFound();
+
+            return ok
+                ? Ok(new { Message = "User updated successfully." })
+                : NotFound(new { Message = "User not found." });
         }
 
         [HttpDelete("Delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var ok = await _service.DeleteUserAsync(id);
-            return ok ? Ok() : NotFound();
+
+            return ok
+                ? Ok(new { Message = "User deleted successfully." })
+                : NotFound(new { Message = "User not found." });
         }
     }
 }
