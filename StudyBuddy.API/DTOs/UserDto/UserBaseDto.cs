@@ -2,14 +2,22 @@
 {
     public class UserBaseDto
     {
+        public int UserId { get; set; }
+
+        public Guid UserGuid { get; set; }
+
         public string NameSurname { get; set; } = string.Empty;
-        public string? Email { get; set; }
-        public string Password { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
         public string? AboutMe { get; set; }
-        public string University { get; set; } = string.Empty;
-        public string? Major { get; set; }
+
         public DateTime CreatedDate { get; set; }
+
+        public string University { get; set; } = string.Empty;
+
+        public string? Major { get; set; }
+
         public DateTime? UpdatedDate { get; set; }
     }
 }
-
