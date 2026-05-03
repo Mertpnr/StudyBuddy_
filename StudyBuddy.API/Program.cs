@@ -19,6 +19,9 @@ builder.Services.AddScoped<IDbConnectionFactory, MsSqlDbConnectionFactory>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<IOptionRepository, OptionRepository>();
