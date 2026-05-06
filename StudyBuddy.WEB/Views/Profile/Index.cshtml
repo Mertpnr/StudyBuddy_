@@ -1,0 +1,56 @@
+﻿@model StudyBuddy.WEB.Models.User.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<section class="sb-page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-2">My Profile</h1>
+        <p class="text-muted mb-0">View your StudyBuddy profile information.</p>
+    </div>
+</section>
+
+<section class="sb-section">
+    <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="sb-auth-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">@Model.NameSurname</h2>
+
+                <a asp-controller="Profile" asp-action="Edit" class="btn sb-btn-primary">
+                    Edit Profile
+                </a>
+            </div>
+
+            <dl class="row">
+                <dt class="col-sm-3">User ID</dt>
+                <dd class="col-sm-9">@Model.UserId</dd>
+
+                <dt class="col-sm-3">User Guid</dt>
+                <dd class="col-sm-9">@Model.UserGuid</dd>
+
+                <dt class="col-sm-3">Full Name</dt>
+                <dd class="col-sm-9">@Model.NameSurname</dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">University</dt>
+                <dd class="col-sm-9">@Model.University</dd>
+
+                <dt class="col-sm-3">Major</dt>
+                <dd class="col-sm-9">@Model.Major</dd>
+
+                <dt class="col-sm-3">About Me</dt>
+                <dd class="col-sm-9">@Model.AboutMe</dd>
+            </dl>
+        </div>
+    </div>
+</section>

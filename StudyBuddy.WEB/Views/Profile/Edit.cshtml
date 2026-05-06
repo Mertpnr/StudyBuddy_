@@ -1,0 +1,63 @@
+﻿@model StudyBuddy.WEB.Models.User.UserUpdateViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<section class="sb-page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-2">Edit Profile</h1>
+        <p class="text-muted mb-0">Update your public StudyBuddy information.</p>
+    </div>
+</section>
+
+<section class="sb-section">
+    <div class="container">
+        <div class="sb-auth-card">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="UserId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="NameSurname" class="form-label"></label>
+                    <input asp-for="NameSurname" class="form-control sb-form-control" />
+                    <span asp-validation-for="NameSurname" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control sb-form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="University" class="form-label"></label>
+                    <input asp-for="University" class="form-control sb-form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Major" class="form-label"></label>
+                    <input asp-for="Major" class="form-control sb-form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="AboutMe" class="form-label"></label>
+                    <textarea asp-for="AboutMe" class="form-control sb-form-control" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn sb-btn-primary">
+                    Save Changes
+                </button>
+
+                <a asp-controller="Profile" asp-action="Index" class="btn sb-btn-outline">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
