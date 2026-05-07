@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="sb-hero">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <div class="sb-hero-badge">
+                    Smart Student Matching Platform
+                </div>
+
+                <h1 class="sb-hero-title">
+                    Find Your Perfect <span>Study Buddy</span>
+                </h1>
+
+                <p class="sb-hero-text">
+                    StudyBuddy helps students find compatible study partners based on subjects,
+                    learning style, study preferences, and matching answers.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Auth" asp-action="Register" class="btn sb-btn-primary">
+                        Get Started
+                    </a>
+
+                    <a asp-controller="Auth" asp-action="Login" class="btn sb-btn-outline">
+                        Login
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <img src="~/template-assets/hero-img.png" alt="StudyBuddy Hero" class="sb-hero-image" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="sb-section">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <img src="~/template-assets/about.png" alt="About StudyBuddy" class="sb-about-img" />
+            </div>
+
+            <div class="col-lg-6">
+                <h2 class="sb-section-title">
+                    A better way to find study partners
+                </h2>
+
+                <p class="text-muted fs-5 lh-lg">
+                    Instead of randomly asking classmates, StudyBuddy uses profile information,
+                    question answers, and weighted matching logic to recommend compatible students.
+                </p>
+
+                <ul class="sb-check-list">
+                    <li>Match by subject and study goals</li>
+                    <li>Questionnaire-based compatibility</li>
+                    <li>Send and accept match requests</li>
+                    <li>Prepare for future collaboration features</li>
+                </ul>
+
+                <a asp-controller="Auth" asp-action="Register" class="btn sb-btn-primary">
+                    Create Account
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="works" class="sb-section sb-section-light">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="sb-section-title">How StudyBuddy Works</h2>
+            <p class="sb-section-subtitle">
+                The system follows a simple flow: register, complete your profile,
+                answer matching questions, and discover compatible study partners.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="sb-card text-center">
+                    <img src="~/template-assets/ic-find.png" alt="Create Profile" class="sb-icon" />
+                    <h4>Create Profile</h4>
+                    <p>
+                        Add your name, university, major, and short information about your study goals.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="sb-card text-center">
+                    <img src="~/template-assets/ic-introduce.png" alt="Answer Quiz" class="sb-icon" />
+                    <h4>Answer Quiz</h4>
+                    <p>
+                        Complete the matching questionnaire so the system can understand your preferences.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="sb-card text-center">
+                    <img src="~/template-assets/ic-enjoy.png" alt="Find Matches" class="sb-icon" />
+                    <h4>Find Matches</h4>
+                    <p>
+                        See compatible students and send match requests to start studying together.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="sb-section">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <h2 class="sb-section-title">
+                    Designed for real student collaboration
+                </h2>
+
+                <p class="text-muted fs-5 lh-lg">
+                    StudyBuddy includes authentication, quiz answers, matching calculation,
+                    match requests, and user profile management.
+                </p>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-sm-6">
+                        <div class="sb-dashboard-card">
+                            <h5>Secure Login</h5>
+                            <p class="text-muted mb-0">Password hashing and session-based login flow.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="sb-dashboard-card">
+                            <h5>Smart Matching</h5>
+                            <p class="text-muted mb-0">Weighted answers and match percentage calculation.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="sb-dashboard-card">
+                            <h5>Profile System</h5>
+                            <p class="text-muted mb-0">UserGuid for public identification and UserId for relations.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="sb-dashboard-card">
+                            <h5>Request Flow</h5>
+                            <p class="text-muted mb-0">Send, accept, or reject study match requests.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <img src="~/template-assets/features-image.png" alt="StudyBuddy Features" class="sb-feature-img" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="sb-section sb-section-light">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <h2 class="sb-section-title">
+                    Ready to find your study partner?
+                </h2>
+
+                <p class="text-muted fs-5 lh-lg">
+                    Start by creating an account and completing your matching quiz.
+                    After that, StudyBuddy can recommend compatible students.
+                </p>
+
+                <a asp-controller="Auth" asp-action="Register" class="btn sb-btn-primary">
+                    Start Now
+                </a>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <img src="~/template-assets/mockup-1.png" alt="StudyBuddy Mockup" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</section>
