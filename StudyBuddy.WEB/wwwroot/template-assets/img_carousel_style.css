@@ -1,0 +1,66 @@
+.slider-container-1 .logos-slide1 img {
+  height: auto;
+  max-width: 100px !important;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding-bottom: 10px;
+}
+
+.slider-container-1 {
+  position: relative;
+  overflow: hidden;
+  
+}
+
+.slider-container-1:before,
+.slider-container-1:after {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  content: "";
+  z-index: 2;
+}
+
+.logo-slider1 {
+  padding-top: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.logos-slide1 {
+  display: inline-block;
+  animation: 10s slide1 infinite linear;
+}
+
+.logos-slide1 img {
+  margin: 0 40px;
+}
+
+.info1 {
+  text-align: center;
+  padding-bottom: 15px;
+  overflow: auto;
+}
+
+@keyframes slide1 {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide1-reverse {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
