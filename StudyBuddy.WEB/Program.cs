@@ -16,9 +16,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IApiClientService, ApiClientService>();
 builder.Services.AddScoped<IAuthWebService, AuthWebService>();
 builder.Services.AddScoped<IUserWebService, UserWebService>();
-builder.Services.AddScoped<IQuizWebService, QuizWebService>();
-builder.Services.AddScoped<IMatchWebService, MatchWebService>();
-builder.Services.AddScoped<IMatchRequestWebService, MatchRequestWebService>();
+//builder.Services.AddScoped<IQuizWebService, QuizWebService>();
+//builder.Services.AddScoped<IMatchWebService, MatchWebService>();
+//builder.Services.AddScoped<IMatchRequestWebService, MatchRequestWebService>();
 
 builder.Services.AddSession(options =>
 {

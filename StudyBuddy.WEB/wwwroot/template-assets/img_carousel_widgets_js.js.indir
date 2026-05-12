@@ -1,0 +1,22 @@
+/************************ Image Script *******************************/
+document.querySelectorAll(".slider-container-1").forEach(function (container) {
+    var slider = container.querySelector(".logo-slider1");
+    var originalSlide = container.querySelector(".logos-slide1");
+    var copy1 = originalSlide.cloneNode(true);
+    var copy2 = originalSlide.cloneNode(true);
+    var copy3 = originalSlide.cloneNode(true);
+    slider.appendChild(copy1);
+    slider.appendChild(copy2);
+    slider.appendChild(copy3);
+});
+
+document.querySelectorAll(".slider-container-1 .logo-slider1").forEach(function (slider) {
+    var originalSlide = slider.querySelector(".logos-slide1");
+    var originalClone = originalSlide.cloneNode(true);
+    var copy1 = originalSlide.cloneNode(true);
+    var copy2 = originalSlide.cloneNode(true);
+    var copy3 = originalSlide.cloneNode(true);
+    slider.appendChild(copy1);
+    slider.appendChild(copy2);
+    slider.appendChild(copy3);
+});
