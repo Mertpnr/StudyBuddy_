@@ -16,8 +16,8 @@ namespace StudyBuddy.API.Model
         [Column("Text")]
         public string Text { get; set; }
 
-        [Column("Vale")]
-        public decimal Vale { get; set; }
+        [Column("Value")]
+        public decimal Value { get; set; }
 
         [Column("OrderNo")]
         public int OrderNo { get; set; }

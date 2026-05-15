@@ -11,7 +11,7 @@ namespace StudyBuddy.API.Model
         public int QuestionId { get; set; }
 
         [Column("Question")]
-        public string QuestionText { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
 
         [Column("CategoryId")]
         public int CategoryId { get; set; }
