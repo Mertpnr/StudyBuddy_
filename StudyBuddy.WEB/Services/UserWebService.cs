@@ -1,46 +1,60 @@
-using StudyBuddy.WEB.Models.User;
+using StudyBuddy.WEB.Models.Quiz;
 using StudyBuddy.WEB.Services.Interfaces;
 
 namespace StudyBuddy.WEB.Services
 {
-    public class UserWebService : IUserWebService
+    public class QuizWebService : IQuizWebService
     {
         private readonly IApiClientService _apiClientService;
 
-        public UserWebService(IApiClientService apiClientService)
+        public QuizWebService(IApiClientService apiClientService)
         {
             _apiClientService = apiClientService;
         }
 
-        public async Task<List<UserProfileViewModel>> GetAllUsersAsync()
+        public async Task<QuizPageViewModel> GetQuizAsync()
         {
-            return await _apiClientService.GetAsync<List<UserProfileViewModel>>("User/GetAll")
-                   ?? new List<UserProfileViewModel>();
-        }
+            var questions = await _apiClientService.GetAsync<List<QuestionViewModel>>("Question/GetAll")
+                            ?? new List<QuestionViewModel>();
 
-        public async Task<UserProfileViewModel?> GetUserByIdAsync(int userId)
-        {
-            return await _apiClientService.GetAsync<UserProfileViewModel>($"User/GetById/{userId}");
-        }
+            var options = await _apiClientService.GetAsync<List<OptionViewModel>>("Option/GetAll")
+                          ?? new List<OptionViewModel>();
 
-        public async Task<UserProfileViewModel?> GetUserByGuidAsync(Guid userGuid)
-        {
-            return await _apiClientService.GetAsync<UserProfileViewModel>($"User/GetByGuid/{userGuid}");
-        }
-
-        public async Task<bool> UpdateUserAsync(UserUpdateViewModel model)
-        {
-            var request = new
+            foreach (var question in questions)
             {
-                userId = model.UserId,
-                nameSurname = model.NameSurname,
-                email = model.Email,
-                aboutMe = model.AboutMe,
-                university = model.University,
-                major = model.Major
-            };
+                question.Options = options
+                    .Where(x => x.QuestionId == question.QuestionId)
+                    .OrderBy(x => x.OrderNo)
+                    .ToList();
+            }
 
-            return await _apiClientService.PutAsync("User/Update", request);
+            return new QuizPageViewModel
+            {
+                Questions = questions
+            };
+        }
+
+        public async Task<bool> SubmitAnswersAsync(int userId, Dictionary<int, int> selectedOptions)
+        {
+            if (selectedOptions == null || selectedOptions.Count == 0)
+                return false;
+
+            foreach (var item in selectedOptions)
+            {
+                var request = new AnswerCreateViewModel
+                {
+                    UserId = userId,
+                    QuestionId = item.Key,
+                    OptionId = item.Value
+                };
+
+                var ok = await _apiClientService.PostAsync("Answers/Create", request);
+
+                if (!ok)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

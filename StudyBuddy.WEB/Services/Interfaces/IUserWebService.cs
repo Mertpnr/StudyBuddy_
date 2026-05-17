@@ -1,15 +1,11 @@
-﻿using StudyBuddy.WEB.Models.User;
+﻿using StudyBuddy.WEB.Models.Quiz;
 
 namespace StudyBuddy.WEB.Services.Interfaces
 {
-	public interface IUserWebService
-	{
-		Task<List<UserProfileViewModel>> GetAllUsersAsync();
+    public interface IQuizWebService
+    {
+        Task<QuizPageViewModel> GetQuizAsync();
 
-		Task<UserProfileViewModel?> GetUserByIdAsync(int userId);
-
-		Task<UserProfileViewModel?> GetUserByGuidAsync(Guid userGuid);
-
-		Task<bool> UpdateUserAsync(UserUpdateViewModel model);
-	}
+        Task<bool> SubmitAnswersAsync(int userId, Dictionary<int, int> selectedOptions);
+    }
 }
