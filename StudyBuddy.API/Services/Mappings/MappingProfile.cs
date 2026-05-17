@@ -42,14 +42,34 @@ namespace StudyBuddy.API.Services.Mappings
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text ?? string.Empty))
                 .ReverseMap();
 
-            CreateMap<Option, OptionCreateRequest>().ReverseMap();
-            CreateMap<Option, OptionUpdateRequest>().ReverseMap();
+            CreateMap<Option, OptionCreateRequest>()
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text ?? string.Empty))
+                .ReverseMap();
+
+            CreateMap<Option, OptionUpdateRequest>()
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text ?? string.Empty))
+                .ReverseMap();
 
             // Question
-            CreateMap<Question, QuestionBaseDto>().ReverseMap();
-            CreateMap<Question, QuestionListDto>().ReverseMap();
-            CreateMap<Question, QuestionCreateRequest>().ReverseMap();
-            CreateMap<Question, QuestionUpdateRequest>().ReverseMap();
+            CreateMap<Question, QuestionBaseDto>()
+                .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.QuestionText))
+                .ReverseMap()
+                .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question));
+
+            CreateMap<Question, QuestionListDto>()
+                .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.QuestionText))
+                .ReverseMap()
+                .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question));
+
+            CreateMap<Question, QuestionCreateRequest>()
+                .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.QuestionText))
+                .ReverseMap()
+                .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question));
+
+            CreateMap<Question, QuestionUpdateRequest>()
+                .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.QuestionText))
+                .ReverseMap()
+                .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question));
 
             // Match
             CreateMap<Match, MatchBaseDto>().ReverseMap();

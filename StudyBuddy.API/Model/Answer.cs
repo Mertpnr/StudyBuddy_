@@ -6,7 +6,7 @@ namespace StudyBuddy.API.Model
     public class Answer
     {
         [Key]
-        [Column("AnwerId")]
+        [Column("AnswerId")]
         public int AnswerId { get; set; }
         [Column("QuestionId")]
         public int QuestionId { get; set; }
