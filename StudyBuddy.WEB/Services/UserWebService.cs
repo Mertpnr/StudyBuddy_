@@ -1,60 +1,46 @@
-using StudyBuddy.WEB.Models.Quiz;
+using StudyBuddy.WEB.Models.User;
 using StudyBuddy.WEB.Services.Interfaces;
 
 namespace StudyBuddy.WEB.Services
 {
-    public class QuizWebService : IQuizWebService
+    public class UserWebService : IUserWebService
     {
         private readonly IApiClientService _apiClientService;
 
-        public QuizWebService(IApiClientService apiClientService)
+        public UserWebService(IApiClientService apiClientService)
         {
             _apiClientService = apiClientService;
         }
 
-        public async Task<QuizPageViewModel> GetQuizAsync()
+        public async Task<List<UserProfileViewModel>> GetAllUsersAsync()
         {
-            var questions = await _apiClientService.GetAsync<List<QuestionViewModel>>("Question/GetAll")
-                            ?? new List<QuestionViewModel>();
-
-            var options = await _apiClientService.GetAsync<List<OptionViewModel>>("Option/GetAll")
-                          ?? new List<OptionViewModel>();
-
-            foreach (var question in questions)
-            {
-                question.Options = options
-                    .Where(x => x.QuestionId == question.QuestionId)
-                    .OrderBy(x => x.OrderNo)
-                    .ToList();
-            }
-
-            return new QuizPageViewModel
-            {
-                Questions = questions
-            };
+            return await _apiClientService.GetAsync<List<UserProfileViewModel>>("Users")
+                   ?? new List<UserProfileViewModel>();
         }
 
-        public async Task<bool> SubmitAnswersAsync(int userId, Dictionary<int, int> selectedOptions)
+        public async Task<UserProfileViewModel?> GetUserByIdAsync(int userId)
         {
-            if (selectedOptions == null || selectedOptions.Count == 0)
-                return false;
+            return await _apiClientService.GetAsync<UserProfileViewModel>($"Users/{userId}");
+        }
 
-            foreach (var item in selectedOptions)
+        public async Task<UserProfileViewModel?> GetUserByGuidAsync(Guid userGuid)
+        {
+            return await _apiClientService.GetAsync<UserProfileViewModel>($"Users/guid/{userGuid}");
+        }
+
+        public async Task<bool> UpdateUserAsync(UserUpdateViewModel model)
+        {
+            var request = new
             {
-                var request = new AnswerCreateViewModel
-                {
-                    UserId = userId,
-                    QuestionId = item.Key,
-                    OptionId = item.Value
-                };
+                userId = model.UserId,
+                nameSurname = model.NameSurname,
+                email = model.Email,
+                aboutMe = model.AboutMe,
+                university = model.University,
+                major = model.Major
+            };
 
-                var ok = await _apiClientService.PostAsync("Answers/Create", request);
-
-                if (!ok)
-                    return false;
-            }
-
-            return true;
+            return await _apiClientService.PutAsync("Users", request);
         }
     }
 }
