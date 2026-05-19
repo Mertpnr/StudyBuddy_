@@ -21,7 +21,7 @@ namespace StudyBuddy.API.Model
         public byte Status { get; set; }
 
         [Column("Message")]
-        public string Message { get; set; } 
+        public required string Message { get; set; } 
 
         [Column("CreatedDate")]
         public DateTime CreatedDate { get; set; }
