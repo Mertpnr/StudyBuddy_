@@ -13,7 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg => 
+{
+    cfg.AddProfile<MappingProfile>();
+});
 
 builder.Services.AddScoped<IDbConnectionFactory, MsSqlDbConnectionFactory>();
 

@@ -11,7 +11,7 @@ namespace StudyBuddy.API.Model
         [Column("CategoryId")]
         public int CategoryId { get; set; }
         [Column("CategoryName")]
-        public string CategoryName { get; set; }
+        public required string CategoryName { get; set; }
     }
 
 }

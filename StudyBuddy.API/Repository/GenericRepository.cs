@@ -107,7 +107,11 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             using (var con = _context.CreateConnection())
             {
-                object result = await con.ExecuteScalarAsync(query, parameters);
+                object? result = await con.ExecuteScalarAsync(query, parameters);
+                if (result == null)
+                {
+                    throw new InvalidOperationException($"Database failed to return an ID during insertion for {typeof(T).Name}.");
+                }
                 return (TKey)Convert.ChangeType(result, typeof(TKey));
             }
         }
@@ -132,8 +136,12 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
             string tableName = GetTableName();
             var property = GetKeyPropertyName();
 
-            var setList = string.Join(", ", GetProperties(excludeKey: true).Select(p => $"{p.Name}=@{p.Name}"));
+            if (string.IsNullOrEmpty(property))
+            {
+                throw new InvalidOperationException($"Update operation failed: Type '{typeof(T).Name}' does not have a property decorated with the [Key] attribute.");
+            }
 
+            var setList = string.Join(", ", GetProperties(excludeKey: true).Select(p => $"{p.Name}=@{p.Name}"));
             var query = $"UPDATE {tableName} SET {setList} WHERE {property} = @{property}";
 
             try
@@ -178,7 +186,7 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
             return type.Name + "s";
         }
 
-        public static string GetKeyColumnName()
+        public static string? GetKeyColumnName()
         {
             PropertyInfo[] properties = typeof(T).GetProperties();
 
@@ -254,14 +262,14 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
             return properties;
         }
 
-        protected string GetKeyPropertyName()
+        protected string? GetKeyPropertyName()
         {
             var properties = typeof(T).GetProperties()
                 .Where(p => p.GetCustomAttribute<KeyAttribute>() != null);
 
             if (properties.Any())
             {
-                return properties.FirstOrDefault().Name;
+                return properties.FirstOrDefault()!.Name;
             }
 
             return null;
@@ -291,7 +299,7 @@ SELECT CAST(SCOPE_IDENTITY() AS INT);";
             if (propertyType == typeof(string))
                 return (id.ToString()!, DbType.String);
 
-            throw new InvalidCastException($"'{propertyType.Name}' türüne dönüşüm desteklenmiyor.");
+            throw new InvalidCastException($"'{propertyType.Name}' cast is not supported.");
         }
     }
 }
