@@ -27,14 +27,7 @@ namespace StudyBuddy.WEB.Controllers
 
             var currentUserId = int.Parse(userIdText);
 
-            var users = await _userWebService.GetAllUsersAsync();
-
-            var model = new MatchPageViewModel
-            {
-                Users = users
-                    .Where(x => x.UserId != currentUserId)
-                    .ToList()
-            };
+            var model = await BuildMatchPageAsync(currentUserId);
 
             return View(model);
         }
@@ -48,6 +41,12 @@ namespace StudyBuddy.WEB.Controllers
                 return RedirectToAction("Login", "Auth");
 
             var currentUserId = int.Parse(userIdText);
+
+            if (pageModel.SelectedUserId <= 0)
+            {
+                TempData["ErrorMessage"] = "Please select a user to calculate match.";
+                return RedirectToAction("Index");
+            }
 
             var request = new CalculateMatchViewModel
             {
@@ -64,15 +63,54 @@ namespace StudyBuddy.WEB.Controllers
 
             var result = await _matchWebService.CalculateMatchAsync(request);
 
-            var users = await _userWebService.GetAllUsersAsync();
-
-            pageModel.Users = users
-                .Where(x => x.UserId != currentUserId)
-                .ToList();
+            pageModel = await BuildMatchPageAsync(currentUserId);
 
             pageModel.Result = result;
 
             return View("Index", pageModel);
+        }
+
+        private async Task<MatchPageViewModel> BuildMatchPageAsync(int currentUserId)
+        {
+            var users = (await _userWebService.GetAllUsersAsync())
+                .Where(x => x.UserId != currentUserId)
+                .ToList();
+
+            var candidates = new List<MatchCandidateViewModel>();
+
+            foreach (var user in users)
+            {
+                var result = await _matchWebService.CalculateMatchAsync(new CalculateMatchViewModel
+                {
+                    User1Id = currentUserId,
+                    User2Id = user.UserId,
+                    SubjectQuestionId = 1,
+                    SubjectMatchMode = 1,
+                    MinimumSharedQuestions = 1,
+                    SaveResult = true
+                });
+
+                candidates.Add(new MatchCandidateViewModel
+                {
+                    UserId = user.UserId,
+                    UserGuid = user.UserGuid,
+                    NameSurname = user.NameSurname,
+                    Email = user.Email,
+                    University = user.University,
+                    Major = user.Major,
+                    AboutMe = user.AboutMe,
+                    MatchPercent = result?.MatchPercent
+                });
+            }
+
+            return new MatchPageViewModel
+            {
+                Users = users,
+                Candidates = candidates
+                    .OrderByDescending(x => x.MatchPercent ?? 0m)
+                    .ThenBy(x => x.NameSurname)
+                    .ToList()
+            };
         }
     }
 }

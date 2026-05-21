@@ -43,6 +43,15 @@ namespace StudyBuddy.API.Services
 
         public async Task<int> CreateAnswerAsync(AnswerCreateRequest request)
         {
+            var existing = await _repository.GetByUserAndQuestionAsync(request.UserId, request.QuestionId);
+
+            if (existing != null)
+            {
+                existing.OptionId = request.OptionId;
+                await _repository.Update(existing);
+                return existing.AnswerId;
+            }
+
             var entity = new Answer
             {
                 QuestionId = request.QuestionId,
