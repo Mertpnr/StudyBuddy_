@@ -6,6 +6,8 @@ namespace StudyBuddy.WEB.Models.Match
     {
         public List<UserProfileViewModel> Users { get; set; } = new();
 
+        public List<MatchCandidateViewModel> Candidates { get; set; } = new();
+        
         public MatchResultViewModel? Result { get; set; }
 
         public int SelectedUserId { get; set; }
