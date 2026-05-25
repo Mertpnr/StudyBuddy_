@@ -13,7 +13,8 @@ namespace StudyBuddy.WEB.Models.Auth
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(6)]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessage = "Password must contain at least one uppercase letter and one special character.")]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
 

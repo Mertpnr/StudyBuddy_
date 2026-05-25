@@ -4,9 +4,9 @@
     {
         public int MatchRequestId { get; set; }
 
-        public int SenderUserId { get; set; }
+        public int User1Id { get; set; }
 
-        public int ReceiverUserId { get; set; }
+        public int User2Id { get; set; }
 
         public int Status { get; set; }
 
@@ -27,10 +27,12 @@
 
         public DateTime CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public string? Message { get; set; }
 
-        public string? SenderName { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
-        public string? ReceiverName { get; set; }
+        public string? User1Name { get; set; }
+
+        public string? User2Name { get; set; }
     }
 }

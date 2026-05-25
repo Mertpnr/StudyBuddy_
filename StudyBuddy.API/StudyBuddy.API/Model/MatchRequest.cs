@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,7 +20,7 @@ namespace StudyBuddy.API.Model
         public byte Status { get; set; }
 
         [Column("Message")]
-        public string Message { get; set; } 
+        public string? Message { get; set; }
 
         [Column("CreatedDate")]
         public DateTime CreatedDate { get; set; }

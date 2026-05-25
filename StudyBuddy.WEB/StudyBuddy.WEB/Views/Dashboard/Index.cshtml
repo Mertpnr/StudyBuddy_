@@ -1,64 +1,472 @@
-﻿@{
+﻿@model StudyBuddy.WEB.Models.Dashboard.DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
+    var firstName = Model.UserName.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? Model.UserName;
 }
 
-<section class="sb-page-header">
+<section class="sb-dash">
     <div class="container">
-        <h1 class="fw-bold mb-2">Dashboard</h1>
-        <p class="text-muted mb-0">Welcome, @ViewBag.UserName. Continue your StudyBuddy journey.</p>
-    </div>
-</section>
+        <div class="sb-dash-hero">
+            <div class="sb-dash-copy">
+                <span class="sb-dash-kicker">Your study command center</span>
+                <h1>@firstName, find the right study partner faster.</h1>
+                <p>
+                    Track matches, manage requests, and jump back into real study conversations from one polished workspace.
+                </p>
 
-<section class="sb-section">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="sb-dashboard-card">
-                    <h5>Profile</h5>
-                    <p class="text-muted">
-                        View or edit your profile information.
-                    </p>
-                    <a asp-controller="Profile" asp-action="Index" class="btn sb-btn-outline">
-                        Go to Profile
-                    </a>
+                <div class="sb-dash-actions">
+                    <a asp-controller="Match" asp-action="Index" class="btn sb-dash-primary">Find Matches</a>
+                    <a asp-controller="Chat" asp-action="Index" class="btn sb-dash-secondary">Open Chats</a>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="sb-dashboard-card">
-                    <h5>Quiz</h5>
-                    <p class="text-muted">
-                        Answer questions for better matching.
-                    </p>
-                    <a asp-controller="Quiz" asp-action="Index" class="btn sb-btn-outline">
-                        Start Quiz
-                    </a>
+            <div class="sb-dash-chat">
+                <div class="sb-dash-chat-head">
+                    <div>
+                        <span>Live chat preview</span>
+                        <h2>Recent conversations</h2>
+                    </div>
+                    <a asp-controller="Chat" asp-action="Index">View all</a>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <div class="sb-dashboard-card">
-                    <h5>Matches</h5>
-                    <p class="text-muted">
-                        View compatible study partners.
-                    </p>
-                    <a asp-controller="Match" asp-action="Index" class="btn sb-btn-outline">
-                        View Matches
-                    </a>
-                </div>
+                @if (Model.RecentChats.Any())
+                {
+                    <div class="sb-dash-chat-list">
+                        @foreach (var chat in Model.RecentChats)
+                        {
+                            <a asp-controller="Chat"
+                               asp-action="Room"
+                               asp-route-matchRequestId="@chat.MatchRequestId"
+                               class="sb-dash-chat-row">
+                                <div class="sb-dash-avatar">
+                                    @chat.OtherUserName.FirstOrDefault().ToString().ToUpperInvariant()
+                                </div>
+                                <div class="sb-dash-chat-text">
+                                    <strong>@chat.OtherUserName</strong>
+                                    <small>
+                                        @(string.IsNullOrWhiteSpace(chat.LastMessage)
+                                            ? "Start the conversation"
+                                            : chat.LastMessage)
+                                    </small>
+                                </div>
+                                @if (chat.LastMessageDate.HasValue)
+                                {
+                                    <time>@chat.LastMessageDate.Value.ToLocalTime().ToString("HH:mm")</time>
+                                }
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="sb-dash-empty-chat">
+                        <strong>No conversations yet</strong>
+                        <span>Accept a match request and your first chat will appear here.</span>
+                    </div>
+                }
             </div>
+        </div>
 
-            <div class="col-md-3">
-                <div class="sb-dashboard-card">
-                    <h5>Requests</h5>
-                    <p class="text-muted">
-                        Manage incoming and outgoing requests.
-                    </p>
-                    <a asp-controller="MatchRequest" asp-action="Index" class="btn sb-btn-outline">
-                        View Requests
-                    </a>
-                </div>
+        <div class="sb-dash-stats">
+            <div>
+                <span>@Model.AcceptedMatchCount</span>
+                <strong>Accepted matches</strong>
             </div>
+            <div>
+                <span>@Model.PendingRequestCount</span>
+                <strong>Pending requests</strong>
+            </div>
+            <div>
+                <span>@Model.ActiveChatCount</span>
+                <strong>Active chats</strong>
+            </div>
+        </div>
+
+        <div class="sb-dash-section-head">
+            <span>Next best actions</span>
+            <h2>Keep your StudyBuddy momentum moving</h2>
+        </div>
+
+        <div class="sb-dash-grid">
+            <a asp-controller="Profile" asp-action="Index" class="sb-dash-card">
+                <span>01</span>
+                <h3>Profile</h3>
+                <p>Make your study identity clear, trustworthy, and easy to match.</p>
+                <strong>Go to Profile</strong>
+            </a>
+
+            <a asp-controller="Quiz" asp-action="Index" class="sb-dash-card accent-amber">
+                <span>02</span>
+                <h3>Quiz</h3>
+                <p>Answer compatibility questions so the system can recommend better partners.</p>
+                <strong>Start Quiz</strong>
+            </a>
+
+            <a asp-controller="Match" asp-action="Index" class="sb-dash-card accent-blue">
+                <span>03</span>
+                <h3>Matches</h3>
+                <p>Browse study partners ranked by shared interests and learning fit.</p>
+                <strong>View Matches</strong>
+            </a>
+
+            <a asp-controller="MatchRequest" asp-action="Index" class="sb-dash-card accent-green">
+                <span>04</span>
+                <h3>Requests</h3>
+                <p>Accept promising invites and turn them into active study sessions.</p>
+                <strong>View Requests</strong>
+            </a>
+
+            <a asp-controller="Chat" asp-action="Index" class="sb-dash-card accent-purple">
+                <span>05</span>
+                <h3>Chats</h3>
+                <p>Continue planning, sharing notes, and coordinating with accepted matches.</p>
+                <strong>Open Chats</strong>
+            </a>
         </div>
     </div>
 </section>
+
+<style>
+    .sb-dash {
+        padding: 42px 0 86px;
+        background: #f7f8fb;
+    }
+
+    .sb-dash .container {
+        max-width: 1320px;
+    }
+
+    .sb-dash-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
+        gap: 22px;
+        min-height: 480px;
+        padding: 28px;
+        border-radius: 8px;
+        background: #111827;
+        color: #ffffff;
+        box-shadow: 0 26px 80px rgba(17, 24, 39, 0.18);
+    }
+
+    .sb-dash-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 34px;
+        border-radius: 8px;
+        background:
+            linear-gradient(135deg, rgba(255, 79, 134, 0.24), rgba(37, 99, 235, 0.10)),
+            #151f32;
+    }
+
+    .sb-dash-kicker,
+    .sb-dash-section-head span,
+    .sb-dash-chat-head span {
+        display: block;
+        color: #7dd3fc;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0;
+        margin-bottom: 10px;
+    }
+
+    .sb-dash-copy h1 {
+        max-width: 760px;
+        font-size: 62px;
+        font-weight: 900;
+        line-height: 1.02;
+        margin: 0 0 20px;
+    }
+
+    .sb-dash-copy p {
+        max-width: 650px;
+        color: #d7deea;
+        font-size: 20px;
+        line-height: 1.55;
+        margin-bottom: 30px;
+    }
+
+    .sb-dash-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .sb-dash-primary,
+    .sb-dash-secondary {
+        min-height: 50px;
+        border-radius: 8px;
+        padding: 13px 24px;
+        font-weight: 900;
+    }
+
+    .sb-dash-primary {
+        background: #ff4f86;
+        color: #ffffff !important;
+        box-shadow: 0 16px 34px rgba(255, 79, 134, 0.28);
+    }
+
+    .sb-dash-secondary {
+        border: 1px solid rgba(255, 255, 255, 0.36);
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sb-dash-chat {
+        padding: 24px;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #111827;
+    }
+
+    .sb-dash-chat-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .sb-dash-chat-head h2,
+    .sb-dash-section-head h2 {
+        font-size: 28px;
+        font-weight: 900;
+        margin: 0;
+    }
+
+    .sb-dash-chat-head a {
+        color: #ff4f86;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+    .sb-dash-chat-list {
+        display: grid;
+        gap: 12px;
+    }
+
+    .sb-dash-chat-row {
+        display: grid;
+        grid-template-columns: 50px minmax(0, 1fr) auto;
+        gap: 13px;
+        align-items: center;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        color: inherit;
+        text-decoration: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .sb-dash-chat-row:hover {
+        color: inherit;
+        border-color: rgba(37, 99, 235, 0.42);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+        transform: translateY(-2px);
+    }
+
+    .sb-dash-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 900;
+    }
+
+    .sb-dash-chat-text {
+        min-width: 0;
+    }
+
+    .sb-dash-chat-text strong,
+    .sb-dash-chat-text small {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .sb-dash-chat-text small,
+    .sb-dash-chat-row time,
+    .sb-dash-empty-chat span {
+        color: #64748b;
+    }
+
+    .sb-dash-empty-chat {
+        display: grid;
+        gap: 8px;
+        place-items: center;
+        min-height: 260px;
+        padding: 24px;
+        text-align: center;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .sb-dash-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin: 22px 0 38px;
+    }
+
+    .sb-dash-stats div {
+        padding: 22px 24px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 14px 36px rgba(15, 23, 42, 0.07);
+    }
+
+    .sb-dash-stats span {
+        display: block;
+        color: #ff4f86;
+        font-size: 38px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .sb-dash-stats strong {
+        display: block;
+        color: #475569;
+        margin-top: 8px;
+    }
+
+    .sb-dash-section-head {
+        margin-bottom: 18px;
+    }
+
+    .sb-dash-section-head span {
+        color: #2563eb;
+    }
+
+    .sb-dash-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .sb-dash-card {
+        position: relative;
+        min-height: 245px;
+        padding: 24px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #111827;
+        text-decoration: none;
+        overflow: hidden;
+        box-shadow: 0 16px 42px rgba(15, 23, 42, 0.07);
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .sb-dash-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 6px;
+        background: #ff4f86;
+    }
+
+    .sb-dash-card:hover {
+        color: #111827;
+        border-color: rgba(255, 79, 134, 0.45);
+        box-shadow: 0 24px 58px rgba(15, 23, 42, 0.12);
+        transform: translateY(-4px);
+    }
+
+    .sb-dash-card span {
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+    .sb-dash-card h3 {
+        font-size: 27px;
+        font-weight: 900;
+        margin: 32px 0 10px;
+    }
+
+    .sb-dash-card p {
+        color: #64748b;
+        line-height: 1.45;
+        margin-bottom: 34px;
+    }
+
+    .sb-dash-card strong {
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        bottom: 22px;
+        color: #ff4f86;
+    }
+
+    .accent-amber::before {
+        background: #f59e0b;
+    }
+
+    .accent-blue::before {
+        background: #2563eb;
+    }
+
+    .accent-green::before {
+        background: #0f766e;
+    }
+
+    .accent-purple::before {
+        background: #7c3aed;
+    }
+
+    @@media (max-width: 1200px) {
+        .sb-dash-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .sb-dash-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .sb-dash-copy h1 {
+            font-size: 46px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .sb-dash {
+            padding-top: 22px;
+        }
+
+        .sb-dash-hero,
+        .sb-dash-copy {
+            padding: 18px;
+        }
+
+        .sb-dash-copy h1 {
+            font-size: 36px;
+        }
+
+        .sb-dash-copy p {
+            font-size: 17px;
+        }
+
+        .sb-dash-stats,
+        .sb-dash-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sb-dash-chat-row {
+            grid-template-columns: 44px minmax(0, 1fr);
+        }
+
+        .sb-dash-chat-row time {
+            grid-column: 2;
+        }
+    }
+</style>

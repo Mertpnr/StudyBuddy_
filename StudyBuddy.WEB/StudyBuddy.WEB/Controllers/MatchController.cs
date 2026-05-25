@@ -8,13 +8,16 @@ namespace StudyBuddy.WEB.Controllers
     {
         private readonly IUserWebService _userWebService;
         private readonly IMatchWebService _matchWebService;
+        private readonly IMatchRequestWebService _matchRequestWebService;
 
         public MatchController(
             IUserWebService userWebService,
-            IMatchWebService matchWebService)
+            IMatchWebService matchWebService,
+            IMatchRequestWebService matchRequestWebService)
         {
             _userWebService = userWebService;
             _matchWebService = matchWebService;
+            _matchRequestWebService = matchRequestWebService;
         }
 
         [HttpGet]
@@ -52,10 +55,7 @@ namespace StudyBuddy.WEB.Controllers
             {
                 User1Id = currentUserId,
                 User2Id = pageModel.SelectedUserId,
-
-                // Change this if your Subject question id is different.
                 SubjectQuestionId = 1,
-
                 SubjectMatchMode = 1,
                 MinimumSharedQuestions = 1,
                 SaveResult = true
@@ -75,11 +75,18 @@ namespace StudyBuddy.WEB.Controllers
             var users = (await _userWebService.GetAllUsersAsync())
                 .Where(x => x.UserId != currentUserId)
                 .ToList();
+            var activeRequests = (await _matchRequestWebService.GetRequestsByUserIdAsync(currentUserId))
+                .Where(x => x.Status == 0 || x.Status == 1)
+                .ToList();
 
             var candidates = new List<MatchCandidateViewModel>();
 
             foreach (var user in users)
             {
+                var activeRequest = activeRequests.FirstOrDefault(x =>
+                    (x.User1Id == currentUserId && x.User2Id == user.UserId)
+                    || (x.User1Id == user.UserId && x.User2Id == currentUserId));
+
                 var result = await _matchWebService.CalculateMatchAsync(new CalculateMatchViewModel
                 {
                     User1Id = currentUserId,
@@ -99,7 +106,9 @@ namespace StudyBuddy.WEB.Controllers
                     University = user.University,
                     Major = user.Major,
                     AboutMe = user.AboutMe,
-                    MatchPercent = result?.MatchPercent
+                    MatchPercent = result?.MatchPercent,
+                    ActiveMatchRequestId = activeRequest?.MatchRequestId,
+                    ActiveMatchRequestStatus = activeRequest?.Status
                 });
             }
 

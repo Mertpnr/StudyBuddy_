@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 builder.Services.AddScoped<IDbConnectionFactory, MsSqlDbConnectionFactory>();
 
@@ -37,6 +37,9 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IMatchRequestService, MatchRequestService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 builder.Services.AddScoped<IMatchingService, MatchingService>();
 

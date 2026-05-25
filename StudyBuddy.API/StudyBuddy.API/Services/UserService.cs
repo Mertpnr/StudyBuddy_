@@ -158,5 +158,16 @@ namespace StudyBuddy.API.Services
 
             return await _repository.Delete(id);
         }
+        private static void ValidatePassword(string password)
+        {
+            if (password.Length < 8)
+                throw new Exception("Password must be at least 8 characters long.");
+
+            if (!password.Any(char.IsUpper))
+                throw new Exception("Password must contain at least one uppercase letter.");
+
+            if (!password.Any(ch => char.IsPunctuation(ch) || char.IsSymbol(ch)))
+                throw new Exception("Password must contain at least one special character.");
+        }
     }
 }

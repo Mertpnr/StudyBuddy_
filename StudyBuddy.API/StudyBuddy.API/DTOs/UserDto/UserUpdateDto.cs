@@ -2,7 +2,6 @@
 {
     public class UserUpdateDto : UserBaseDto
     {
-        public int UserId { get; set; }
     }
 }
 

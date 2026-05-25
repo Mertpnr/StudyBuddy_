@@ -4,53 +4,277 @@
     ViewData["Title"] = "Login";
 }
 
-<section class="sb-auth-section">
+<style>
+    .sb-login-shell {
+        background:
+            linear-gradient(135deg, rgba(255, 66, 132, .08), rgba(111, 201, 255, .1)),
+            #f6f7fb;
+        min-height: calc(100vh - 96px);
+        padding: 78px 0;
+    }
+
+    .sb-login-wrap {
+        align-items: stretch;
+        border-radius: 24px;
+        box-shadow: 0 34px 90px rgba(15, 23, 42, .14);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(420px, .72fr);
+        margin: 0 auto;
+        max-width: 1120px;
+        overflow: hidden;
+    }
+
+    .sb-login-story {
+        background: #111827;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 560px;
+        padding: 44px;
+        position: relative;
+    }
+
+    .sb-login-story::after {
+        background:
+            radial-gradient(circle at 18% 16%, rgba(255, 66, 132, .45), transparent 28%),
+            radial-gradient(circle at 78% 24%, rgba(111, 201, 255, .34), transparent 28%),
+            linear-gradient(135deg, rgba(255, 255, 255, .08), transparent);
+        content: "";
+        inset: 0;
+        position: absolute;
+    }
+
+    .sb-login-story > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .sb-login-kicker {
+        color: #6fc9ff;
+        font-size: .78rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .sb-login-title {
+        font-size: clamp(2.4rem, 4vw, 4.8rem);
+        font-weight: 900;
+        letter-spacing: 0;
+        line-height: .98;
+        margin: 16px 0 18px;
+        max-width: 560px;
+    }
+
+    .sb-login-copy {
+        color: rgba(255, 255, 255, .72);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        max-width: 500px;
+    }
+
+    .sb-login-preview {
+        background: rgba(255, 255, 255, .08);
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 20px;
+        display: grid;
+        gap: 14px;
+        margin-top: 34px;
+        max-width: 520px;
+        padding: 18px;
+    }
+
+    .sb-login-preview-row {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+    }
+
+    .sb-login-dot {
+        background: #ff4284;
+        border-radius: 999px;
+        flex: 0 0 12px;
+        height: 12px;
+        width: 12px;
+    }
+
+    .sb-login-preview strong {
+        display: block;
+        font-weight: 900;
+    }
+
+    .sb-login-preview span {
+        color: rgba(255, 255, 255, .62);
+        display: block;
+        font-size: .9rem;
+        margin-top: 2px;
+    }
+
+    .sb-login-card {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 46px;
+    }
+
+    .sb-login-card-head {
+        margin-bottom: 28px;
+    }
+
+    .sb-login-card-head h2 {
+        color: #111827;
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .sb-login-card-head p {
+        color: #64748b;
+        margin: 0;
+    }
+
+    .sb-login-field {
+        margin-bottom: 18px;
+    }
+
+    .sb-login-card .form-label {
+        color: #111827;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .sb-login-card .form-control,
+    .sb-login-card .sb-form-control {
+        background: #f8fafc;
+        border: 1px solid rgba(15, 23, 42, .11);
+        border-radius: 14px;
+        box-shadow: none;
+        min-height: 54px;
+        padding: 13px 15px;
+    }
+
+    .sb-login-card .form-control:focus {
+        background: #fff;
+        border-color: #ff4284;
+        box-shadow: 0 0 0 4px rgba(255, 66, 132, .12);
+    }
+
+    .sb-login-card .btn {
+        min-height: 54px;
+    }
+
+    .sb-login-register {
+        color: #64748b;
+        font-weight: 700;
+        margin-top: 22px;
+        text-align: center;
+    }
+
+    .sb-login-register a {
+        color: #ff4284;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+    @@media (max-width: 992px) {
+        .sb-login-shell {
+            padding: 34px 0;
+        }
+
+        .sb-login-wrap {
+            border-radius: 18px;
+            grid-template-columns: 1fr;
+        }
+
+        .sb-login-story {
+            min-height: auto;
+            padding: 32px;
+        }
+
+        .sb-login-card {
+            padding: 30px;
+        }
+    }
+</style>
+
+<section class="sb-login-shell">
     <div class="container">
-        <div class="row align-items-center justify-content-center gy-5">
-            <div class="col-lg-5 d-none d-lg-block text-center">
-                <img src="~/template-assets/mockup-3.png" alt="Login StudyBuddy" class="img-fluid" />
-            </div>
+        <div class="sb-login-wrap">
+            <aside class="sb-login-story">
+                <div>
+                    <p class="sb-login-kicker mb-0">Welcome back</p>
+                    <h1 class="sb-login-title">Pick up where your study flow stopped.</h1>
+                    <p class="sb-login-copy">
+                        Return to your dashboard, review requests, and continue conversations with study partners you already matched with.
+                    </p>
 
-            <div class="col-lg-5">
-                <div class="sb-auth-card">
-                    <div class="text-center mb-4">
-                        <h2 class="fw-bold">Welcome back</h2>
-                        <p class="text-muted mb-0">
-                            Login and continue finding your study matches.
-                        </p>
+                    <div class="sb-login-preview">
+                        <div class="sb-login-preview-row">
+                            <div class="sb-login-dot"></div>
+                            <div>
+                                <strong>Active chats stay ready</strong>
+                                <span>Accepted matches are one click away.</span>
+                            </div>
+                        </div>
+
+                        <div class="sb-login-preview-row">
+                            <div class="sb-login-dot"></div>
+                            <div>
+                                <strong>Requests are easy to track</strong>
+                                <span>Incoming and sent invites live in one workspace.</span>
+                            </div>
+                        </div>
+
+                        <div class="sb-login-preview-row">
+                            <div class="sb-login-dot"></div>
+                            <div>
+                                <strong>Your profile keeps improving</strong>
+                                <span>Update your study identity whenever your goals change.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="sb-login-card">
+                <div class="sb-login-card-head text-center">
+                    <p class="sb-login-kicker mb-2">Account access</p>
+                    <h2>Login to StudyBuddy</h2>
+                    <p>Continue finding matches and studying smarter together.</p>
+                </div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="sb-login-field">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control sb-form-control" placeholder="you@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success">
-                            @TempData["SuccessMessage"]
-                        </div>
-                    }
-
-                    <form asp-action="Login" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control sb-form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control sb-form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <button type="submit" class="btn sb-btn-primary w-100">
-                            Login
-                        </button>
-                    </form>
-
-                    <div class="text-center mt-4">
-                        Don't have an account?
-                        <a asp-controller="Auth" asp-action="Register">Register</a>
+                    <div class="sb-login-field">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control sb-form-control" placeholder="Your password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
+
+                    <button type="submit" class="btn sb-btn-primary w-100">
+                        Login
+                    </button>
+                </form>
+
+                <div class="sb-login-register">
+                    Don't have an account?
+                    <a asp-controller="Auth" asp-action="Register">Register</a>
                 </div>
             </div>
         </div>

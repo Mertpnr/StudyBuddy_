@@ -14,18 +14,18 @@ namespace StudyBuddy.WEB.Services
 
         public async Task<List<UserProfileViewModel>> GetAllUsersAsync()
         {
-            return await _apiClientService.GetAsync<List<UserProfileViewModel>>("Users")
+            return await _apiClientService.GetAsync<List<UserProfileViewModel>>("User/GetAll")
                    ?? new List<UserProfileViewModel>();
         }
 
         public async Task<UserProfileViewModel?> GetUserByIdAsync(int userId)
         {
-            return await _apiClientService.GetAsync<UserProfileViewModel>($"Users/{userId}");
+            return await _apiClientService.GetAsync<UserProfileViewModel>($"User/GetById/{userId}");
         }
 
         public async Task<UserProfileViewModel?> GetUserByGuidAsync(Guid userGuid)
         {
-            return await _apiClientService.GetAsync<UserProfileViewModel>($"Users/guid/{userGuid}");
+            return await _apiClientService.GetAsync<UserProfileViewModel>($"User/GetByGuid/{userGuid}");
         }
 
         public async Task<bool> UpdateUserAsync(UserUpdateViewModel model)
@@ -40,7 +40,7 @@ namespace StudyBuddy.WEB.Services
                 major = model.Major
             };
 
-            return await _apiClientService.PutAsync("Users", request);
+            return await _apiClientService.PutAsync("User/Update", request);
         }
     }
 }

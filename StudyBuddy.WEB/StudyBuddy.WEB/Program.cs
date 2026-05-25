@@ -19,6 +19,7 @@ builder.Services.AddScoped<IUserWebService, UserWebService>();
 builder.Services.AddScoped<IQuizWebService, QuizWebService>();
 builder.Services.AddScoped<IMatchWebService, MatchWebService>();
 builder.Services.AddScoped<IMatchRequestWebService, MatchRequestWebService>();
+builder.Services.AddScoped<IChatWebService, ChatWebService>();
 
 builder.Services.AddSession(options =>
 {

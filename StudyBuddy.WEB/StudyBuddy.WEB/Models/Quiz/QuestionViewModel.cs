@@ -6,6 +6,12 @@ namespace StudyBuddy.WEB.Models.Quiz
 
         public string Question { get; set; } = string.Empty;
 
+        public string QuestionText
+        {
+            get => Question;
+            set => Question = value;
+        }
+
         public int CategoryId { get; set; }
 
         public decimal MatchPercent { get; set; }

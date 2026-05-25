@@ -18,16 +18,13 @@ namespace StudyBuddy.API.Services
         public async Task<List<MatchRequestListDto>> GetAllMatchRequestsAsync()
         {
             var list = await _repository.GetAll();
+            return MapList(list);
+        }
 
-            return list.Select(x => new MatchRequestListDto
-            {
-                MatchRequestId = x.MatchRequestId,
-                User1Id = x.User1Id,
-                User2Id = x.User2Id,
-                Status = x.Status,
-                Message = x.Message,
-                CreatedDate = x.CreatedDate
-            }).ToList();
+        public async Task<List<MatchRequestListDto>> GetMatchRequestsByUserIdAsync(int userId)
+        {
+            var list = await _repository.GetByUserIdAsync(userId);
+            return MapList(list);
         }
 
         public async Task<MatchRequestBaseDto?> GetMatchRequestByIdAsync(int id)
@@ -45,15 +42,29 @@ namespace StudyBuddy.API.Services
             };
         }
 
-        public async Task<int> CreateMatchRequestAsync(MatchRequestCreateRequest request)
+        public async Task<int?> CreateMatchRequestAsync(MatchRequestCreateRequest request)
         {
+            if (request.User1Id <= 0 || request.User2Id <= 0 || request.User1Id == request.User2Id)
+                return null;
+
+            var activeRequest = await _repository.GetActiveBetweenUsersAsync(
+                request.User1Id,
+                request.User2Id);
+
+            if (activeRequest != null)
+                return null;
+
             var entity = new MatchRequest
             {
                 User1Id = request.User1Id,
                 User2Id = request.User2Id,
                 Status = request.Status,
-                Message = request.Message,
-                CreatedDate = request.CreatedDate
+                Message = string.IsNullOrWhiteSpace(request.Message)
+                    ? "This user wants to match with you."
+                    : request.Message,
+                CreatedDate = request.CreatedDate == default
+                    ? DateTime.UtcNow
+                    : request.CreatedDate
             };
 
             return await _repository.InsertReturnId(entity);
@@ -67,8 +78,10 @@ namespace StudyBuddy.API.Services
             existing.User1Id = request.User1Id;
             existing.User2Id = request.User2Id;
             existing.Status = request.Status;
-            existing.Message = request.Message;
-            existing.CreatedDate = request.CreatedDate;
+            existing.Message = request.Message ?? existing.Message;
+
+            if (request.CreatedDate != default)
+                existing.CreatedDate = request.CreatedDate;
 
             return await _repository.Update(existing);
         }
@@ -79,6 +92,19 @@ namespace StudyBuddy.API.Services
             if (existing == null) return false;
 
             return await _repository.Delete(id);
+        }
+
+        private static List<MatchRequestListDto> MapList(IEnumerable<MatchRequest> list)
+        {
+            return list.Select(x => new MatchRequestListDto
+            {
+                MatchRequestId = x.MatchRequestId,
+                User1Id = x.User1Id,
+                User2Id = x.User2Id,
+                Status = x.Status,
+                Message = x.Message,
+                CreatedDate = x.CreatedDate
+            }).ToList();
         }
     }
 }

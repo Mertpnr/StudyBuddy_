@@ -29,10 +29,20 @@ namespace StudyBuddy.API.Controllers
             return item is null ? NotFound() : Ok(item);
         }
 
+        [HttpGet("GetByUser/{userId:int}")]
+        public async Task<IActionResult> GetByUser(int userId)
+        {
+            var list = await _service.GetMatchRequestsByUserIdAsync(userId);
+            return Ok(list);
+        }
+
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] MatchRequestCreateRequest request)
         {
             var id = await _service.CreateMatchRequestAsync(request);
+            if (id == null)
+                return BadRequest(new { Message = "An active match request or chat already exists between these users." });
+
             return Ok(new { id });
         }
 

@@ -19,31 +19,40 @@ namespace StudyBuddy.WEB.Services
         public async Task<List<MatchRequestListViewModel>> GetRequestsByUserIdAsync(int userId)
         {
             var requests = await _apiClientService.GetAsync<List<MatchRequestListViewModel>>(
-                $"MatchRequests/user/{userId}"
+                $"MatchRequest/GetByUser/{userId}"
             ) ?? new List<MatchRequestListViewModel>();
 
             foreach (var request in requests)
             {
-                var sender = await _userWebService.GetUserByIdAsync(request.SenderUserId);
-                var receiver = await _userWebService.GetUserByIdAsync(request.ReceiverUserId);
+                var user1 = await _userWebService.GetUserByIdAsync(request.User1Id);
+                var user2 = await _userWebService.GetUserByIdAsync(request.User2Id);
 
-                request.SenderName = sender?.NameSurname;
-                request.ReceiverName = receiver?.NameSurname;
+                request.User1Name = user1?.NameSurname;
+                request.User2Name = user2?.NameSurname;
             }
 
             return requests;
         }
 
-        public async Task<bool> SendRequestAsync(int senderUserId, int receiverUserId)
+        public async Task<bool> SendRequestAsync(int user1Id, int user2Id, string? message)
         {
+            var user1 = await _userWebService.GetUserByIdAsync(user1Id);
+            var user1Name = string.IsNullOrWhiteSpace(user1?.NameSurname)
+                ? "A user"
+                : user1.NameSurname;
+
             var request = new
             {
-                senderUserId = senderUserId,
-                receiverUserId = receiverUserId,
-                status = 0
+                user1Id,
+                user2Id,
+                status = 0,
+                message = string.IsNullOrWhiteSpace(message)
+                    ? $"{user1Name} wants to match with you."
+                    : message,
+                createdDate = DateTime.UtcNow
             };
 
-            return await _apiClientService.PostAsync("MatchRequests", request);
+            return await _apiClientService.PostAsync("MatchRequest/Create", request);
         }
 
         public async Task<bool> AcceptRequestAsync(MatchRequestListViewModel request)
@@ -63,15 +72,25 @@ namespace StudyBuddy.WEB.Services
 
         private async Task<bool> UpdateStatusAsync(MatchRequestListViewModel request, int status)
         {
+            var message = status switch
+            {
+                1 => $"{request.User2Name ?? "The user"} accepted your match request.",
+                2 => $"{request.User2Name ?? "The user"} declined your match request.",
+                3 => "Match request was cancelled.",
+                _ => request.Message
+            };
+
             var updateRequest = new
             {
                 matchRequestId = request.MatchRequestId,
-                senderUserId = request.SenderUserId,
-                receiverUserId = request.ReceiverUserId,
-                status = status
+                user1Id = request.User1Id,
+                user2Id = request.User2Id,
+                status,
+                message,
+                createdDate = request.CreatedDate
             };
 
-            return await _apiClientService.PutAsync("MatchRequests", updateRequest);
+            return await _apiClientService.PutAsync("MatchRequest/Update", updateRequest);
         }
     }
 }

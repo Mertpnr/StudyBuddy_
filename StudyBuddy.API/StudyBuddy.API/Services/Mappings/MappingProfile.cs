@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StudyBuddy.API.DTOs.AnswerDto;
 using StudyBuddy.API.DTOs.CategoryDto;
+using StudyBuddy.API.DTOs.ChatDto;
 using StudyBuddy.API.DTOs.MatchDto;
 using StudyBuddy.API.DTOs.MatchRequestDto;
 using StudyBuddy.API.DTOs.OptionDto;
@@ -9,6 +10,7 @@ using StudyBuddy.API.DTOs.UserDto;
 using StudyBuddy.API.Model;
 using StudyBuddy.API.Requests.AnswerRequest;
 using StudyBuddy.API.Requests.CategoryRequest;
+using StudyBuddy.API.Requests.ChatRequest;
 using StudyBuddy.API.Requests.MatchRequest;
 using StudyBuddy.API.Requests.MatchRequestRequest;
 using StudyBuddy.API.Requests.OptionRequest;
@@ -99,6 +101,17 @@ namespace StudyBuddy.API.Services.Mappings
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+
+            // Chat
+            CreateMap<Chat, ChatBaseDto>().ReverseMap();
+            CreateMap<Chat, ChatListDto>().ReverseMap();
+
+            CreateMap<ChatCreateRequest, Chat>()
+                .ForMember(dest => dest.ChatId, opt => opt.Ignore())
+                .ForMember(dest => dest.Date, opt => opt.Ignore());
+
+            CreateMap<ChatUpdateRequest, Chat>()
+                .ForMember(dest => dest.Date, opt => opt.Ignore());
         }
     }
 }

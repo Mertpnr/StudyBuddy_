@@ -20,6 +20,8 @@ namespace StudyBuddy.WEB.Services
             var options = await _apiClientService.GetAsync<List<OptionViewModel>>("Option/GetAll")
                           ?? new List<OptionViewModel>();
 
+            ApplyQuestionTextFallbacks(questions);
+
             foreach (var question in questions)
             {
                 question.Options = options
@@ -32,6 +34,31 @@ namespace StudyBuddy.WEB.Services
             {
                 Questions = questions
             };
+        }
+
+        private static void ApplyQuestionTextFallbacks(List<QuestionViewModel> questions)
+        {
+            string[] defaultQuestions =
+            {
+                "What subject do you want to study most often?",
+                "What is your preferred study style?",
+                "When do you usually prefer to study?",
+                "How often do you want to meet with a study buddy?",
+                "What is your main goal when studying with someone?",
+                "How do you prefer to communicate while studying?",
+                "How much structure do you like in a study session?",
+                "What is your current confidence level in the subject you want to study?",
+                "How do you handle difficult topics?",
+                "What kind of study buddy are you looking for?"
+            };
+
+            for (int i = 0; i < questions.Count && i < defaultQuestions.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(questions[i].Question))
+                {
+                    questions[i].Question = defaultQuestions[i];
+                }
+            }
         }
 
         public async Task<bool> SubmitAnswersAsync(int userId, Dictionary<int, int> selectedOptions)

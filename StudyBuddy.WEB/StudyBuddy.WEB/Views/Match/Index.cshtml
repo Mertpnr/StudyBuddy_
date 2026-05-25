@@ -4,17 +4,209 @@
     ViewData["Title"] = "Matches";
 }
 
-<section class="sb-page-header">
-    <div class="container">
-        <h1 class="fw-bold mb-2">Find Match</h1>
-        <p class="text-muted mb-0">Choose another user and calculate your study compatibility.</p>
-    </div>
-</section>
+<style>
+    .sb-match-shell {
+        background: #f6f7fb;
+        min-height: calc(100vh - 170px);
+        padding-bottom: 72px;
+    }
 
-<section class="sb-section">
-    <div class="container">
-        <div class="sb-auth-card">
+    .sb-match-hero {
+        background: #111827;
+        color: #fff;
+        padding: 68px 0 96px;
+    }
 
+    .sb-match-kicker {
+        color: #6fc9ff;
+        font-size: .78rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .sb-match-wrap {
+        max-width: 1120px;
+        margin: -50px auto 0;
+    }
+
+    .sb-match-panel,
+    .sb-result-panel {
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 18px;
+        box-shadow: 0 28px 70px rgba(15, 23, 42, .08);
+        padding: 26px;
+    }
+
+    .sb-match-form {
+        align-items: flex-end;
+        display: grid;
+        gap: 14px;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
+    .sb-select-modern {
+        border: 1px solid rgba(15, 23, 42, .12);
+        border-radius: 12px;
+        min-height: 50px;
+        padding: 0 14px;
+    }
+
+    .sb-section-title {
+        align-items: center;
+        display: flex;
+        gap: 14px;
+        justify-content: space-between;
+        margin: 34px 0 16px;
+    }
+
+    .sb-match-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sb-candidate-card {
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-height: 230px;
+        padding: 22px;
+    }
+
+    .sb-candidate-top {
+        align-items: flex-start;
+        display: flex;
+        gap: 14px;
+    }
+
+    .sb-avatar {
+        align-items: center;
+        background: linear-gradient(135deg, #ff4284, #2f6df6);
+        border-radius: 16px;
+        color: #fff;
+        display: flex;
+        flex: 0 0 56px;
+        font-size: 1.25rem;
+        font-weight: 900;
+        height: 56px;
+        justify-content: center;
+        text-transform: uppercase;
+        width: 56px;
+    }
+
+    .sb-candidate-name {
+        color: #111827;
+        font-size: 1.2rem;
+        font-weight: 900;
+        margin: 0;
+    }
+
+    .sb-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .sb-chip {
+        background: #f1f5f9;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 999px;
+        color: #334155;
+        font-size: .82rem;
+        font-weight: 800;
+        padding: 7px 10px;
+    }
+
+    .sb-candidate-about {
+        color: #64748b;
+        margin: 0;
+    }
+
+    .sb-candidate-actions {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+    }
+
+    .sb-status-pill {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 999px;
+        color: #9a3412;
+        font-weight: 900;
+        padding: 9px 13px;
+    }
+
+    .sb-result-panel {
+        margin-top: 20px;
+    }
+
+    .sb-result-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin: 18px 0;
+    }
+
+    .sb-result-item {
+        background: #f8fafc;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+    .sb-result-label {
+        color: #6fc9ff;
+        font-size: .76rem;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .sb-result-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 900;
+        margin-top: 6px;
+    }
+
+    .sb-empty-match {
+        background: #fff;
+        border: 1px dashed rgba(15, 23, 42, .2);
+        border-radius: 16px;
+        padding: 28px;
+    }
+
+    @@media (max-width: 992px) {
+        .sb-match-form,
+        .sb-match-grid,
+        .sb-result-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sb-match-form {
+            align-items: stretch;
+        }
+    }
+</style>
+
+<div class="sb-match-shell">
+    <section class="sb-match-hero">
+        <div class="container">
+            <p class="sb-match-kicker mb-2">Study network</p>
+            <h1 class="fw-bold mb-2">Find a study buddy</h1>
+            <p class="text-white-50 mb-0">Browse compatible students, start a request, or jump into chat when a match is already active.</p>
+        </div>
+    </section>
+
+    <section class="container sb-match-wrap">
+        <div class="sb-match-panel">
             @if (TempData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger">
@@ -22,16 +214,26 @@
                 </div>
             }
 
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
             @if (Model.Users == null || !Model.Users.Any())
             {
-                <p class="text-muted">No other users found.</p>
+                <div class="sb-empty-match">
+                    <h2 class="h5 fw-bold">No other users found.</h2>
+                    <p class="text-muted mb-0">New study buddies will appear here after more students join.</p>
+                </div>
             }
             else
             {
-                <form asp-controller="Match" asp-action="Calculate" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Select User</label>
-                        <select asp-for="SelectedUserId" class="form-control" required>
+                <form asp-controller="Match" asp-action="Calculate" method="post" class="sb-match-form">
+                    <div>
+                        <label class="form-label fw-bold">Choose a student</label>
+                        <select asp-for="SelectedUserId" class="form-control sb-select-modern" required>
                             <option value="">Select a user</option>
 
                             @foreach (var user in Model.Users)
@@ -44,109 +246,146 @@
                     </div>
 
                     <button type="submit" class="btn sb-btn-primary">
-                        Calculate Match
+                        Check Match
                     </button>
 
-                    <a asp-controller="Dashboard" asp-action="Index" class="btn sb-btn-outline ms-2">
-                        Back to Dashboard
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn sb-btn-outline">
+                        Dashboard
                     </a>
                 </form>
             }
 
             @if (Model.Candidates != null && Model.Candidates.Any())
             {
-                <hr />
+                <div class="sb-section-title">
+                    <div>
+                        <p class="sb-match-kicker mb-1">Suggestions</p>
+                        <h2 class="h4 fw-bold mb-0">People you may study well with</h2>
+                    </div>
+                </div>
 
-                <h5 class="fw-bold mb-3">Suggested Matches</h5>
+                <div class="sb-match-grid">
+                    @foreach (var candidate in Model.Candidates)
+                    {
+                        var initial = string.IsNullOrWhiteSpace(candidate.NameSurname)
+                        ? "S"
+                        : candidate.NameSurname.Trim().Substring(0, 1);
 
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>University</th>
-                                <th>Major</th>
-                                <th>Match</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var candidate in Model.Candidates)
-                            {
-                                <tr>
-                                    <td>@candidate.NameSurname</td>
-                                    <td>@candidate.University</td>
-                                    <td>@candidate.Major</td>
-                                    <td>
-                                        @if (candidate.MatchPercent.HasValue)
-                                        {
-                                            <strong>@((candidate.MatchPercent.Value * 100).ToString("0"))%</strong>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted">No data</span>
-                                        }
-                                    </td>
-                                    <td class="text-end">
-                                        @if (candidate.MatchPercent.HasValue && candidate.MatchPercent.Value > 0)
-                                        {
-                                            <form asp-controller="MatchRequest" asp-action="Create" method="post" class="d-inline">
-                                                <input type="hidden" name="receiverUserId" value="@candidate.UserId" />
-                                                <input type="hidden" name="message" value="Hi, I want to study together." />
+                        <article class="sb-candidate-card">
+                            <div class="sb-candidate-top">
+                                <div class="sb-avatar">@initial</div>
+                                <div>
+                                    <h3 class="sb-candidate-name">@candidate.NameSurname</h3>
 
-                                                <button type="submit" class="btn sb-btn-primary btn-sm">
-                                                    Send Request
-                                                </button>
-                                            </form>
+                                    <div class="sb-chip-row">
+                                        @if (!string.IsNullOrWhiteSpace(candidate.University))
+                                        {
+                                            <span class="sb-chip">@candidate.University</span>
                                         }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+
+                                        @if (!string.IsNullOrWhiteSpace(candidate.Major))
+                                        {
+                                            <span class="sb-chip">@candidate.Major</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="sb-candidate-about">
+                                @(string.IsNullOrWhiteSpace(candidate.AboutMe)
+                                    ? "Ready to connect and plan a study session."
+                                    : candidate.AboutMe)
+                            </p>
+
+                            <div class="sb-candidate-actions">
+                                @if (candidate.CanSendMatchRequest)
+                                {
+                                    <form asp-controller="MatchRequest" asp-action="Create" method="post">
+                                        <input type="hidden" name="user2Id" value="@candidate.UserId" />
+
+                                        <button type="submit" class="btn sb-btn-primary btn-sm">
+                                            Send Request
+                                        </button>
+                                    </form>
+                                }
+                                else if (candidate.ActiveMatchRequestStatus == 1)
+                                {
+                                    <a asp-controller="Chat"
+                                       asp-action="Room"
+                                       asp-route-matchRequestId="@candidate.ActiveMatchRequestId"
+                                       class="btn sb-btn-primary btn-sm">
+                                        Open Chat
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="sb-status-pill">
+                                        @candidate.ActiveMatchRequestStatusText
+                                    </span>
+                                }
+                            </div>
+                        </article>
+                    }
                 </div>
             }
+        </div>
 
-            @if (Model.Result != null)
-            {
-                <hr />
+        @if (Model.Result != null)
+        {
+            var resultCandidate = Model.Candidates?
+            .FirstOrDefault(x => x.UserId == Model.Result.User2Id);
 
-                <div class="alert alert-info">
-                    <h5 class="fw-bold">Match Result</h5>
+            <div class="sb-result-panel">
+                <p class="sb-match-kicker mb-2">Match check</p>
+                <h2 class="h4 fw-bold mb-2">Compatibility summary</h2>
+                <p class="text-muted mb-0">@Model.Result.Message</p>
 
-                    <p>
-                        <strong>Match Percent:</strong>
-                        @(Model.Result.MatchPercent * 100)%
-                    </p>
+                <div class="sb-result-grid">
+                    <div class="sb-result-item">
+                        <div class="sb-result-label">Shared answers</div>
+                        <div class="sb-result-value">@Model.Result.SharedQuestionCount</div>
+                    </div>
 
-                    <p>
-                        <strong>Shared Question Count:</strong>
-                        @Model.Result.SharedQuestionCount
-                    </p>
+                    <div class="sb-result-item">
+                        <div class="sb-result-label">Subject match</div>
+                        <div class="sb-result-value">@(Model.Result.SubjectMatched ? "Yes" : "No")</div>
+                    </div>
 
-                    <p>
-                        <strong>Subject Matched:</strong>
-                        @(Model.Result.SubjectMatched ? "Yes" : "No")
-                    </p>
+                    <div class="sb-result-item">
+                        <div class="sb-result-label">Status</div>
+                        <div class="sb-result-value">@(Model.Result.SavedToDatabase ? "Ready" : "Not saved")</div>
+                    </div>
+                </div>
 
-                    <p>
-                        <strong>Message:</strong>
-                        @Model.Result.Message
-                    </p>
-
-                    @if (Model.Result.SavedToDatabase)
+                @if (Model.Result.SavedToDatabase)
+                {
+                    if (resultCandidate == null || resultCandidate.CanSendMatchRequest)
                     {
                         <form asp-controller="MatchRequest" asp-action="Create" method="post">
-                            <input type="hidden" name="receiverUserId" value="@Model.Result.User2Id" />
-                            <input type="hidden" name="message" value="Hi, I want to study together." />
+                            <input type="hidden" name="user2Id" value="@Model.Result.User2Id" />
 
                             <button type="submit" class="btn sb-btn-primary">
                                 Send Match Request
                             </button>
                         </form>
                     }
-                </div>
-            }
-        </div>
-    </div>
-</section>
+                    else if (resultCandidate.ActiveMatchRequestStatus == 1)
+                    {
+                        <a asp-controller="Chat"
+                           asp-action="Room"
+                           asp-route-matchRequestId="@resultCandidate.ActiveMatchRequestId"
+                           class="btn sb-btn-primary">
+                            Open Chat
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="sb-status-pill">
+                            @resultCandidate.ActiveMatchRequestStatusText
+                        </span>
+                    }
+                }
+            </div>
+        }
+    </section>
+</div>
