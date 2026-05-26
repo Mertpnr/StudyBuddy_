@@ -1,7 +1,6 @@
-﻿namespace StudyBuddy.API.DTOs.UserDto
+namespace StudyBuddy.API.DTOs.UserDto
 {
     public class UserUpdateDto : UserBaseDto
     {
     }
 }
-

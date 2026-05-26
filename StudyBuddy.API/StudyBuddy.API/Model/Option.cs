@@ -14,7 +14,7 @@ namespace StudyBuddy.API.Model
         public int QuestionId { get; set; }
 
         [Column("Text")]
-        public string Text { get; set; }
+        public required string Text { get; set; }
 
         [Column("Value")]
         public decimal Value { get; set; }
