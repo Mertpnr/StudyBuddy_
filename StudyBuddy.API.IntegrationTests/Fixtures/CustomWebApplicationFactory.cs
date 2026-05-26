@@ -152,12 +152,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         mock.Setup(x => x.GetAllCategoriesAsync()).ReturnsAsync(new List<CategoryListDto>
         {
-            new() { CategoryId = 1, CategoryName = "Programming" },
-            new() { CategoryId = 2, CategoryName = "Mathematics" }
+            new() { CategoryName = "Programming" },
+            new() { CategoryName = "Mathematics" }
         });
 
         mock.Setup(x => x.GetCategoryByIdAsync(1))
-            .ReturnsAsync(new CategoryBaseDto { CategoryId = 1, CategoryName = "Programming" });
+            .ReturnsAsync(new CategoryBaseDto { CategoryName = "Programming" });
 
         mock.Setup(x => x.GetCategoryByIdAsync(It.Is<int>(id => id != 1)))
             .ReturnsAsync((CategoryBaseDto?)null);
@@ -177,12 +177,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         mock.Setup(x => x.GetAllQuestionsAsync()).ReturnsAsync(new List<QuestionListDto>
         {
-            new() { QuestionId = 1, CategoryId = 1, QuestionText = "Preferred subject?", MatchPercent = 1m },
-            new() { QuestionId = 2, CategoryId = 1, QuestionText = "Study time?", MatchPercent = 0.5m }
+            new() { CategoryId = 1, Question = "Preferred subject?", MatchPercent = 1m },
+            new() { CategoryId = 1, Question = "Study time?", MatchPercent = 0.5m }
         });
 
         mock.Setup(x => x.GetQuestionByIdAsync(1))
-            .ReturnsAsync(new QuestionBaseDto { QuestionId = 1, CategoryId = 1, QuestionText = "Preferred subject?", MatchPercent = 1m });
+            .ReturnsAsync(new QuestionBaseDto { CategoryId = 1, Question = "Preferred subject?", MatchPercent = 1m });
 
         mock.Setup(x => x.GetQuestionByIdAsync(It.Is<int>(id => id != 1)))
             .ReturnsAsync((QuestionBaseDto?)null);
@@ -202,12 +202,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         mock.Setup(x => x.GetAllOptionsAsync()).ReturnsAsync(new List<OptionListDto>
         {
-            new() { OptionId = 1, QuestionId = 1, Text = "Programming", Value = 1m, OrderNo = 1 },
-            new() { OptionId = 2, QuestionId = 1, Text = "Math", Value = 0.8m, OrderNo = 2 }
+            new() { QuestionId = 1, Text = "Programming", Value = 1m, OrderNo = 1 },
+            new() { QuestionId = 1, Text = "Math", Value = 0.8m, OrderNo = 2 }
         });
 
         mock.Setup(x => x.GetOptionByIdAsync(1))
-            .ReturnsAsync(new OptionBaseDto { OptionId = 1, QuestionId = 1, Text = "Programming", Value = 1m, OrderNo = 1 });
+            .ReturnsAsync(new OptionBaseDto { QuestionId = 1, Text = "Programming", Value = 1m, OrderNo = 1 });
 
         mock.Setup(x => x.GetOptionByIdAsync(It.Is<int>(id => id != 1)))
             .ReturnsAsync((OptionBaseDto?)null);
@@ -232,7 +232,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         });
 
         mock.Setup(x => x.GetAnswerByIdAsync(1))
-            .ReturnsAsync(new AnswerBaseDto { AnswerId = 1, UserId = 1, QuestionId = 1, OptionId = 1 });
+            .ReturnsAsync(new AnswerBaseDto { UserId = 1, QuestionId = 1, OptionId = 1 });
 
         mock.Setup(x => x.GetAnswerByIdAsync(It.Is<int>(id => id != 1)))
             .ReturnsAsync((AnswerBaseDto?)null);
@@ -252,11 +252,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         mock.Setup(x => x.GetAllMatchesAsync()).ReturnsAsync(new List<MatchListDto>
         {
-            new() { MatchId = 1, User1Id = 1, User2Id = 2, MatchPercent = 0.85m, MatchDate = DateTime.Today }
+            new() { User1Id = 1, User2Id = 2, MatchPercent = 0.85m, MatchDate = DateTime.Today }
         });
 
         mock.Setup(x => x.GetMatchByIdAsync(1))
-            .ReturnsAsync(new MatchBaseDto { MatchId = 1, User1Id = 1, User2Id = 2, MatchPercent = 0.85m, MatchDate = DateTime.Today });
+            .ReturnsAsync(new MatchBaseDto { User1Id = 1, User2Id = 2, MatchPercent = 0.85m, MatchDate = DateTime.Today });
 
         mock.Setup(x => x.GetMatchByIdAsync(It.Is<int>(id => id != 1)))
             .ReturnsAsync((MatchBaseDto?)null);
@@ -276,11 +276,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         mock.Setup(x => x.GetAllMatchRequestsAsync()).ReturnsAsync(new List<MatchRequestListDto>
         {
-            new() { MatchRequestId = 1, User1Id = 1, User2Id = 2, Status = 0, Message = "Please study together.", CreatedDate = DateTime.Today }
+            new() { User1Id = 1, User2Id = 2, Status = 0, Message = "Please study together.", CreatedDate = DateTime.Today }
         });
 
         mock.Setup(x => x.GetMatchRequestByIdAsync(1))
-            .ReturnsAsync(new MatchRequestBaseDto { MatchRequestId = 1, User1Id = 1, User2Id = 2, Status = 0, Message = "Please study together.", CreatedDate = DateTime.Today });
+            .ReturnsAsync(new MatchRequestBaseDto { User1Id = 1, User2Id = 2, Status = 0, Message = "Please study together.", CreatedDate = DateTime.Today });
 
         mock.Setup(x => x.GetMatchRequestByIdAsync(It.Is<int>(id => id != 1)))
             .ReturnsAsync((MatchRequestBaseDto?)null);

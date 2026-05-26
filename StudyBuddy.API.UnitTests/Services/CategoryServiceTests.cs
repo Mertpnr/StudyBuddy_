@@ -43,7 +43,7 @@ public class CategoryServiceTests
         var result = await _service.GetCategoryByIdAsync(1);
 
         result.Should().NotBeNull();
-        result!.CategoryId.Should().Be(1);
+        result!.CategoryName.Should().Be("Programming");
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class CategoryServiceTests
     public async Task DeleteCategoryAsync_WhenCategoryExists_ShouldDeleteAndReturnTrue()
     {
         _categoryRepositoryMock.Setup(x => x.GetById(1))
-            .ReturnsAsync(new Category { CategoryId = 1 });
+            .ReturnsAsync(new Category { CategoryId = 1, CategoryName = "Programming" });
 
         _categoryRepositoryMock.Setup(x => x.Delete(1))
             .ReturnsAsync(true);

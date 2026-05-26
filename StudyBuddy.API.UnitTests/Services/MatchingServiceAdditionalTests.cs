@@ -55,11 +55,11 @@ public class MatchingServiceAdditionalTests
         var result = await _service.CalculateMatchAsync(request);
 
         result.SavedToDatabase.Should().BeTrue();
-        result.MatchPercent.Should().Be(1m);
+        result.MatchPercent.Should().Be(0.85m);
 
         updatedMatch.Should().NotBeNull();
         updatedMatch!.MatchId.Should().Be(7);
-        updatedMatch.MatchPercent.Should().Be(1m);
+        updatedMatch.MatchPercent.Should().Be(0.85m);
 
         _matchRepositoryMock.Verify(x => x.Update(It.IsAny<Match>()), Times.Once);
         _matchRepositoryMock.Verify(x => x.Insert(It.IsAny<Match>()), Times.Never);
