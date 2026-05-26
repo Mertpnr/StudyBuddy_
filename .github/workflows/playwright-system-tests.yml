@@ -1,0 +1,60 @@
+name: Playwright System Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  system-tests:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore .\StudyBuddy.SystemTests\StudyBuddy.SystemTests.csproj
+
+      - name: Build
+        run: dotnet build .\StudyBuddy.SystemTests\StudyBuddy.SystemTests.csproj --no-restore
+
+      - name: Install Playwright browsers
+        shell: pwsh
+        run: .\StudyBuddy.SystemTests\bin\Debug\net8.0\playwright.ps1 install chromium
+
+      - name: Start API
+        shell: pwsh
+        run: |
+          Start-Process dotnet -ArgumentList @(
+            'run',
+            '--project',
+            '.\StudyBuddy.API\StudyBuddy.API\StudyBuddy.API.csproj',
+            '--urls',
+            'https://localhost:7278;http://localhost:5252'
+          )
+
+      - name: Start WEB
+        shell: pwsh
+        run: |
+          Start-Process dotnet -ArgumentList @(
+            'run',
+            '--project',
+            '.\StudyBuddy.WEB\StudyBuddy.WEB\StudyBuddy.WEB.csproj',
+            '--urls',
+            'https://localhost:57925;http://localhost:57926'
+          )
+
+      - name: Wait for apps
+        shell: pwsh
+        run: Start-Sleep -Seconds 15
+
+      - name: Run Playwright system tests
+        shell: pwsh
+        env:
+          STUDYBUDDY_WEB_URL: https://localhost:57925
+        run: dotnet test .\StudyBuddy.SystemTests\StudyBuddy.SystemTests.csproj --no-build -- Playwright.BrowserName=chromium
