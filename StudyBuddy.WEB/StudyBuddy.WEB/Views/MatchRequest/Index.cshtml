@@ -1,0 +1,316 @@
+@model List<StudyBuddy.WEB.Models.MatchRequest.MatchRequestListViewModel>
+
+@{
+    ViewData["Title"] = "Match Requests";
+    var currentUserId = ViewBag.CurrentUserId as int? ?? 0;
+
+    var incomingRequests = Model
+        .Where(x => x.User2Id == currentUserId)
+        .OrderByDescending(x => x.CreatedDate)
+        .ToList();
+
+    var outgoingRequests = Model
+        .Where(x => x.User1Id == currentUserId)
+        .OrderByDescending(x => x.CreatedDate)
+        .ToList();
+}
+
+<style>
+    .sb-requests-shell {
+        background: #f6f7fb;
+        min-height: calc(100vh - 170px);
+        padding-bottom: 72px;
+    }
+
+    .sb-requests-hero {
+        background:
+            linear-gradient(135deg, rgba(255, 66, 132, .12), rgba(111, 201, 255, .12)),
+            #fff;
+        border-bottom: 1px solid rgba(15, 23, 42, .06);
+        padding: 68px 0 86px;
+    }
+
+    .sb-requests-wrap {
+        max-width: 1120px;
+        margin: -42px auto 0;
+    }
+
+    .sb-requests-layout {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sb-request-panel {
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 18px;
+        box-shadow: 0 28px 70px rgba(15, 23, 42, .08);
+        overflow: hidden;
+    }
+
+    .sb-request-panel-head {
+        background: #111827;
+        color: #fff;
+        padding: 22px 24px;
+    }
+
+    .sb-request-kicker {
+        color: #6fc9ff;
+        font-size: .78rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .sb-request-list {
+        display: grid;
+        gap: 12px;
+        padding: 18px;
+    }
+
+    .sb-request-card {
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 16px;
+        padding: 18px;
+    }
+
+    .sb-request-top {
+        align-items: flex-start;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+    }
+
+    .sb-request-person {
+        color: #111827;
+        font-size: 1.05rem;
+        font-weight: 900;
+        margin: 0;
+    }
+
+    .sb-request-message {
+        color: #64748b;
+        margin: 8px 0 0;
+    }
+
+    .sb-request-meta {
+        color: #94a3b8;
+        font-size: .85rem;
+        font-weight: 700;
+        margin-top: 12px;
+    }
+
+    .sb-request-actions {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .sb-status {
+        border-radius: 999px;
+        font-size: .8rem;
+        font-weight: 900;
+        padding: 8px 11px;
+        white-space: nowrap;
+    }
+
+    .sb-status-pending {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        color: #9a3412;
+    }
+
+    .sb-status-accepted {
+        background: #ecfdf5;
+        border: 1px solid #bbf7d0;
+        color: #047857;
+    }
+
+    .sb-status-closed {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+    }
+
+    .sb-empty-requests {
+        color: #64748b;
+        padding: 26px;
+    }
+
+    .sb-requests-footer {
+        margin-top: 20px;
+    }
+
+    @@media (max-width: 992px) {
+        .sb-requests-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="sb-requests-shell">
+    <section class="sb-requests-hero">
+        <div class="container">
+            <p class="sb-request-kicker mb-2">Requests</p>
+            <h1 class="fw-bold mb-2">Manage study invites</h1>
+            <p class="text-muted mb-0">Accept the right partners, open chats, and keep outgoing requests under control.</p>
+        </div>
+    </section>
+
+    <section class="container sb-requests-wrap">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="sb-requests-layout">
+            <div class="sb-request-panel">
+                <div class="sb-request-panel-head">
+                    <p class="sb-request-kicker mb-2">Incoming</p>
+                    <h2 class="h4 fw-bold mb-0">Requests sent to you</h2>
+                </div>
+
+                @if (!incomingRequests.Any())
+                {
+                    <div class="sb-empty-requests">No incoming match requests.</div>
+                }
+                else
+                {
+                    <div class="sb-request-list">
+                        @foreach (var request in incomingRequests)
+                        {
+                            var statusClass = request.Status == 0
+                            ? "sb-status-pending"
+                            : request.Status == 1
+                            ? "sb-status-accepted"
+                            : "sb-status-closed";
+
+                            <article class="sb-request-card">
+                                <div class="sb-request-top">
+                                    <div>
+                                        <h3 class="sb-request-person">@(request.User1Name ?? "Unknown user")</h3>
+                                        <p class="sb-request-message">
+                                            @(request.Message ?? $"{request.User1Name ?? "A user"} wants to match with you.")
+                                        </p>
+                                        <div class="sb-request-meta">@request.CreatedDate.ToString("dd MMM yyyy HH:mm")</div>
+                                    </div>
+
+                                    <span class="sb-status @statusClass">@request.StatusText</span>
+                                </div>
+
+                                <div class="sb-request-actions">
+                                    @if (request.Status == 0)
+                                    {
+                                        <form asp-controller="MatchRequest" asp-action="Accept" method="post">
+                                            <input type="hidden" name="id" value="@request.MatchRequestId" />
+                                            <button type="submit" class="btn sb-btn-primary btn-sm">
+                                                Accept
+                                            </button>
+                                        </form>
+
+                                        <form asp-controller="MatchRequest" asp-action="Reject" method="post">
+                                            <input type="hidden" name="id" value="@request.MatchRequestId" />
+                                            <button type="submit" class="btn sb-btn-outline btn-sm">
+                                                Decline
+                                            </button>
+                                        </form>
+                                    }
+
+                                    @if (request.Status == 1)
+                                    {
+                                        <a asp-controller="Chat"
+                                           asp-action="Room"
+                                           asp-route-matchRequestId="@request.MatchRequestId"
+                                           class="btn sb-btn-primary btn-sm">
+                                            Open Chat
+                                        </a>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="sb-request-panel">
+                <div class="sb-request-panel-head">
+                    <p class="sb-request-kicker mb-2">Sent</p>
+                    <h2 class="h4 fw-bold mb-0">Requests you sent</h2>
+                </div>
+
+                @if (!outgoingRequests.Any())
+                {
+                    <div class="sb-empty-requests">No sent match requests.</div>
+                }
+                else
+                {
+                    <div class="sb-request-list">
+                        @foreach (var request in outgoingRequests)
+                        {
+                            var statusClass = request.Status == 0
+                            ? "sb-status-pending"
+                            : request.Status == 1
+                            ? "sb-status-accepted"
+                            : "sb-status-closed";
+
+                            <article class="sb-request-card">
+                                <div class="sb-request-top">
+                                    <div>
+                                        <h3 class="sb-request-person">@(request.User2Name ?? "Unknown user")</h3>
+                                        <p class="sb-request-message">
+                                            @(request.Message ?? "Match request sent.")
+                                        </p>
+                                        <div class="sb-request-meta">@request.CreatedDate.ToString("dd MMM yyyy HH:mm")</div>
+                                    </div>
+
+                                    <span class="sb-status @statusClass">@request.StatusText</span>
+                                </div>
+
+                                <div class="sb-request-actions">
+                                    @if (request.Status == 0)
+                                    {
+                                        <form asp-controller="MatchRequest" asp-action="Cancel" method="post">
+                                            <input type="hidden" name="id" value="@request.MatchRequestId" />
+                                            <button type="submit" class="btn sb-btn-outline btn-sm">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                    }
+
+                                    @if (request.Status == 1)
+                                    {
+                                        <a asp-controller="Chat"
+                                           asp-action="Room"
+                                           asp-route-matchRequestId="@request.MatchRequestId"
+                                           class="btn sb-btn-primary btn-sm">
+                                            Open Chat
+                                        </a>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="sb-requests-footer">
+            <a asp-controller="Dashboard" asp-action="Index" class="btn sb-btn-outline">
+                Back to Dashboard
+            </a>
+        </div>
+    </section>
+</div>

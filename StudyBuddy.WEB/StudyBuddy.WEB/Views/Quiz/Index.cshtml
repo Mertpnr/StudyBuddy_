@@ -1,0 +1,276 @@
+@model StudyBuddy.WEB.Models.Quiz.QuizPageViewModel
+
+@{
+    ViewData["Title"] = "Quiz";
+}
+
+<style>
+    .sb-quiz-shell {
+        background: #f6f7fb;
+        min-height: calc(100vh - 170px);
+        padding-bottom: 72px;
+    }
+
+    .sb-quiz-hero {
+        background:
+            linear-gradient(135deg, rgba(255, 66, 132, .12), rgba(111, 201, 255, .12)),
+            #fff;
+        border-bottom: 1px solid rgba(15, 23, 42, .06);
+        padding: 68px 0 84px;
+    }
+
+    .sb-quiz-wrap {
+        max-width: 1040px;
+        margin: -42px auto 0;
+    }
+
+    .sb-quiz-panel {
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 18px;
+        box-shadow: 0 28px 70px rgba(255, 66, 132, .12);
+        overflow: hidden;
+    }
+
+    .sb-quiz-panel-head {
+        align-items: center;
+        background: #111827;
+        color: #fff;
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+        padding: 26px 30px;
+    }
+
+    .sb-quiz-kicker {
+        color: #6fc9ff;
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .sb-quiz-count {
+        background: rgba(255, 255, 255, .1);
+        border: 1px solid rgba(255, 255, 255, .18);
+        border-radius: 999px;
+        color: #fff;
+        font-weight: 800;
+        padding: 10px 16px;
+        white-space: nowrap;
+    }
+
+    .sb-quiz-body {
+        padding: 28px;
+    }
+
+    .sb-question-card {
+        border: 1px solid rgba(15, 23, 42, .08);
+        border-radius: 16px;
+        padding: 22px;
+    }
+
+    .sb-question-card + .sb-question-card {
+        margin-top: 18px;
+    }
+
+    .sb-question-number {
+        color: #ff4284;
+        font-size: .8rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .sb-question-title {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 900;
+        margin: 6px 0 16px;
+    }
+
+    .sb-options-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sb-quiz-option {
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .sb-quiz-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .sb-quiz-option span {
+        align-items: center;
+        background: #f8fafc;
+        border: 1px solid rgba(15, 23, 42, .1);
+        border-radius: 12px;
+        color: #111827;
+        display: flex;
+        font-weight: 700;
+        min-height: 52px;
+        padding: 14px 16px;
+        transition: .18s ease;
+        width: 100%;
+    }
+
+    .sb-quiz-option span::before {
+        border: 2px solid #cbd5e1;
+        border-radius: 999px;
+        content: "";
+        height: 16px;
+        margin-right: 12px;
+        width: 16px;
+    }
+
+    .sb-quiz-option input:checked + span {
+        background: #fff0f6;
+        border-color: #ff4284;
+        box-shadow: 0 14px 32px rgba(255, 66, 132, .14);
+        color: #ff4284;
+    }
+
+    .sb-quiz-option input:checked + span::before {
+        background: #ff4284;
+        border-color: #ff4284;
+        box-shadow: inset 0 0 0 4px #fff;
+    }
+
+    .sb-quiz-actions {
+        align-items: center;
+        border-top: 1px solid rgba(15, 23, 42, .08);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 26px;
+        padding-top: 24px;
+    }
+
+    .sb-empty-state {
+        background: #fff;
+        border: 1px dashed rgba(15, 23, 42, .2);
+        border-radius: 16px;
+        padding: 34px;
+        text-align: center;
+    }
+
+    @@media (max-width: 768px) {
+        .sb-quiz-hero {
+            padding: 42px 0 72px;
+        }
+
+        .sb-quiz-panel-head {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .sb-options-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sb-quiz-body {
+            padding: 18px;
+        }
+    }
+</style>
+
+<div class="sb-quiz-shell">
+    <section class="sb-quiz-hero">
+        <div class="container">
+            <p class="sb-quiz-kicker mb-2">Study profile</p>
+            <h1 class="fw-bold mb-2">Build better study matches</h1>
+            <p class="text-muted mb-0">Answer a few focused questions so StudyBuddy can understand how you learn best.</p>
+        </div>
+    </section>
+
+    <section class="container sb-quiz-wrap">
+        <div class="sb-quiz-panel">
+            <div class="sb-quiz-panel-head">
+                <div>
+                    <p class="sb-quiz-kicker mb-2">Quiz</p>
+                    <h2 class="h3 fw-bold mb-1">Your study rhythm</h2>
+                    <p class="mb-0 text-white-50">Pick the option that feels closest to you.</p>
+                </div>
+                <div class="sb-quiz-count">
+                    @(Model.Questions?.Count ?? 0) questions
+                </div>
+            </div>
+
+            <div class="sb-quiz-body">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                @if (Model.Questions == null || !Model.Questions.Any())
+                {
+                    <div class="sb-empty-state">
+                        <h3 class="h5 fw-bold">No quiz questions found.</h3>
+                        <p class="text-muted">Come back after questions are added.</p>
+                        <a asp-controller="Dashboard" asp-action="Index" class="btn sb-btn-outline">Back to Dashboard</a>
+                    </div>
+                }
+                else
+                {
+                    <form asp-controller="Quiz" asp-action="Submit" method="post">
+                        @for (int i = 0; i < Model.Questions.Count; i++)
+                        {
+                            var question = Model.Questions[i];
+
+                            <div class="sb-question-card">
+                                <div class="sb-question-number">Question @(i + 1)</div>
+                                <h3 class="sb-question-title">@question.Question</h3>
+
+                                @if (question.Options == null || !question.Options.Any())
+                                {
+                                    <p class="text-danger mb-0">No options found for this question.</p>
+                                }
+                                else
+                                {
+                                    <div class="sb-options-grid">
+                                        @foreach (var option in question.Options)
+                                        {
+                                            <label class="sb-quiz-option" for="option_@option.OptionId">
+                                                <input type="radio"
+                                                       name="SelectedOptions[@question.QuestionId]"
+                                                       value="@option.OptionId"
+                                                       id="option_@option.OptionId"
+                                                       required />
+                                                <span>@option.Text</span>
+                                            </label>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <div class="sb-quiz-actions">
+                            <button type="submit" class="btn sb-btn-primary">
+                                Save Answers
+                            </button>
+
+                            <a asp-controller="Dashboard" asp-action="Index" class="btn sb-btn-outline">
+                                Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </section>
+</div>

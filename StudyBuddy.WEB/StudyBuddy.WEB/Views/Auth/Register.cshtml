@@ -1,0 +1,359 @@
+﻿@model StudyBuddy.WEB.Models.Auth.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    .sb-register-shell {
+        background:
+            linear-gradient(135deg, rgba(255, 66, 132, .08), rgba(111, 201, 255, .1)),
+            #f6f7fb;
+        min-height: calc(100vh - 96px);
+        padding: 72px 0;
+    }
+
+    .sb-register-wrap {
+        align-items: stretch;
+        display: grid;
+        gap: 0;
+        grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+        margin: 0 auto;
+        max-width: 1180px;
+        overflow: hidden;
+        border-radius: 24px;
+        box-shadow: 0 34px 90px rgba(15, 23, 42, .14);
+    }
+
+    .sb-register-story {
+        background: #111827;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 680px;
+        padding: 42px;
+        position: relative;
+    }
+
+    .sb-register-story::after {
+        background:
+            radial-gradient(circle at 18% 18%, rgba(255, 66, 132, .42), transparent 28%),
+            radial-gradient(circle at 85% 24%, rgba(111, 201, 255, .34), transparent 30%),
+            linear-gradient(135deg, rgba(255, 255, 255, .08), transparent);
+        content: "";
+        inset: 0;
+        position: absolute;
+    }
+
+    .sb-register-story > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .sb-register-kicker {
+        color: #6fc9ff;
+        font-size: .78rem;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .sb-register-title {
+        font-size: clamp(2.3rem, 4vw, 4.7rem);
+        font-weight: 900;
+        letter-spacing: 0;
+        line-height: .98;
+        margin: 16px 0 18px;
+    }
+
+    .sb-register-copy {
+        color: rgba(255, 255, 255, .72);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        max-width: 440px;
+    }
+
+    .sb-register-points {
+        display: grid;
+        gap: 12px;
+        margin-top: 34px;
+    }
+
+    .sb-register-point {
+        align-items: center;
+        background: rgba(255, 255, 255, .08);
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 14px;
+        display: flex;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .sb-register-point-mark {
+        align-items: center;
+        background: #ff4284;
+        border-radius: 12px;
+        color: #fff;
+        display: flex;
+        flex: 0 0 34px;
+        font-weight: 900;
+        height: 34px;
+        justify-content: center;
+        width: 34px;
+    }
+
+    .sb-register-point strong {
+        display: block;
+    }
+
+    .sb-register-point span {
+        color: rgba(255, 255, 255, .64);
+        display: block;
+        font-size: .9rem;
+        margin-top: 2px;
+    }
+
+    .sb-register-card {
+        background: #fff;
+        padding: 42px;
+    }
+
+    .sb-register-card-head {
+        margin-bottom: 26px;
+    }
+
+    .sb-register-card-head h2 {
+        color: #111827;
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .sb-register-card-head p {
+        color: #64748b;
+        margin: 0;
+    }
+
+    .sb-register-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sb-register-field {
+        margin-bottom: 16px;
+    }
+
+    .sb-register-field-full {
+        grid-column: 1 / -1;
+    }
+
+    .sb-register-label,
+    .sb-register-card .form-label {
+        color: #111827;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .sb-register-card .form-control,
+    .sb-register-card .sb-form-control {
+        background: #f8fafc;
+        border: 1px solid rgba(15, 23, 42, .11);
+        border-radius: 14px;
+        box-shadow: none;
+        min-height: 54px;
+        padding: 13px 15px;
+    }
+
+    .sb-register-card textarea.form-control {
+        min-height: 112px;
+        resize: vertical;
+    }
+
+    .sb-register-card .form-control:focus {
+        background: #fff;
+        border-color: #ff4284;
+        box-shadow: 0 0 0 4px rgba(255, 66, 132, .12);
+    }
+
+    .sb-field-help {
+        color: #64748b;
+        display: block;
+        font-size: .82rem;
+        line-height: 1.45;
+        margin-top: 7px;
+    }
+
+    .sb-register-submit {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+        margin-top: 8px;
+    }
+
+    .sb-register-submit .btn {
+        min-height: 54px;
+        min-width: 210px;
+    }
+
+    .sb-register-login {
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .sb-register-login a {
+        color: #ff4284;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+    @@media (max-width: 992px) {
+        .sb-register-shell {
+            padding: 34px 0;
+        }
+
+        .sb-register-wrap {
+            border-radius: 18px;
+            grid-template-columns: 1fr;
+        }
+
+        .sb-register-story {
+            min-height: auto;
+            padding: 32px;
+        }
+
+        .sb-register-card {
+            padding: 28px;
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .sb-register-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sb-register-submit {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .sb-register-submit .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="sb-register-shell">
+    <div class="container">
+        <div class="sb-register-wrap">
+            <aside class="sb-register-story">
+                <div>
+                    <p class="sb-register-kicker mb-0">Join StudyBuddy</p>
+                    <h1 class="sb-register-title">Find your next study partner.</h1>
+                    <p class="sb-register-copy">
+                        Build a profile that helps other students understand your university, major, and learning style before the first message.
+                    </p>
+
+                    <div class="sb-register-points">
+                        <div class="sb-register-point">
+                            <div class="sb-register-point-mark">1</div>
+                            <div>
+                                <strong>Create your study identity</strong>
+                                <span>Add the basics that make your profile feel real.</span>
+                            </div>
+                        </div>
+
+                        <div class="sb-register-point">
+                            <div class="sb-register-point-mark">2</div>
+                            <div>
+                                <strong>Take the quiz</strong>
+                                <span>Help StudyBuddy suggest better study partners.</span>
+                            </div>
+                        </div>
+
+                        <div class="sb-register-point">
+                            <div class="sb-register-point-mark">3</div>
+                            <div>
+                                <strong>Start matching</strong>
+                                <span>Send requests and continue in chat after acceptance.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="sb-register-card">
+                <div class="sb-register-card-head">
+                    <p class="sb-register-kicker mb-2">Account setup</p>
+                    <h2>Create your account</h2>
+                    <p>Complete your profile and start matching with students who study like you.</p>
+                </div>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="sb-register-field">
+                        <label asp-for="NameSurname" class="form-label">Full Name</label>
+                        <input asp-for="NameSurname" class="form-control sb-form-control" placeholder="Your full name" />
+                        <span asp-validation-for="NameSurname" class="text-danger"></span>
+                    </div>
+
+                    <div class="sb-register-field">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control sb-form-control" placeholder="you@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="sb-register-grid">
+                        <div class="sb-register-field">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control sb-form-control" placeholder="Create password" />
+                            <small class="sb-field-help">
+                                At least 8 characters, 1 uppercase letter, and 1 special character.
+                            </small>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="sb-register-field">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control sb-form-control" placeholder="Repeat password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="sb-register-field">
+                            <label asp-for="University" class="form-label"></label>
+                            <input asp-for="University" class="form-control sb-form-control" placeholder="Example: KTU" />
+                        </div>
+
+                        <div class="sb-register-field">
+                            <label asp-for="Major" class="form-label"></label>
+                            <input asp-for="Major" class="form-control sb-form-control" placeholder="Example: Software Engineering" />
+                        </div>
+
+                        <div class="sb-register-field sb-register-field-full">
+                            <label asp-for="AboutMe" class="form-label">About Me</label>
+                            <textarea asp-for="AboutMe" class="form-control sb-form-control" rows="3" placeholder="Tell others how you like to study"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="sb-register-submit">
+                        <button type="submit" class="btn sb-btn-primary">
+                            Register
+                        </button>
+
+                        <div class="sb-register-login">
+                            Already have an account?
+                            <a asp-controller="Auth" asp-action="Login">Login</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

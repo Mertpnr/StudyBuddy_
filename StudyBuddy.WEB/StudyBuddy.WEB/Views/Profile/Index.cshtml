@@ -1,0 +1,309 @@
+﻿@model StudyBuddy.WEB.Models.User.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+    var initials = string.Join("", Model.NameSurname
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Take(2)
+        .Select(x => x[0]))
+        .ToUpperInvariant();
+    var memberSince = Model.CreatedDate == default
+        ? "Active member"
+        : $"Member since {Model.CreatedDate.ToLocalTime():MMM yyyy}";
+}
+
+<section class="sb-profile-page">
+    <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success sb-profile-alert">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="sb-profile-hero">
+            <div class="sb-profile-avatar">@initials</div>
+
+            <div class="sb-profile-main">
+                <span class="sb-profile-kicker">Study identity</span>
+                <h1>@Model.NameSurname</h1>
+                <p>
+                    @(string.IsNullOrWhiteSpace(Model.AboutMe)
+                        ? "Tell future study buddies who you are, what you are learning, and how you like to study."
+                        : Model.AboutMe)
+                </p>
+
+                <div class="sb-profile-tags">
+                    <span>@(string.IsNullOrWhiteSpace(Model.University) ? "University not set" : Model.University)</span>
+                    <span>@(string.IsNullOrWhiteSpace(Model.Major) ? "Major not set" : Model.Major)</span>
+                    <span>@memberSince</span>
+                </div>
+            </div>
+
+            <div class="sb-profile-actions">
+                <a asp-controller="Profile" asp-action="Edit" class="btn sb-profile-primary">Edit Profile</a>
+                <a asp-controller="Dashboard" asp-action="Index" class="btn sb-profile-secondary">Dashboard</a>
+            </div>
+        </div>
+
+        <div class="sb-profile-grid">
+            <article class="sb-profile-card sb-profile-card-wide">
+                <span>Public profile</span>
+                <h2>How other study buddies see you</h2>
+
+                <div class="sb-profile-detail-list">
+                    <div>
+                        <strong>Full name</strong>
+                        <p>@Model.NameSurname</p>
+                    </div>
+
+                    <div>
+                        <strong>Email</strong>
+                        <p>@Model.Email</p>
+                    </div>
+
+                    <div>
+                        <strong>University</strong>
+                        <p>@(string.IsNullOrWhiteSpace(Model.University) ? "Not added yet" : Model.University)</p>
+                    </div>
+
+                    <div>
+                        <strong>Major</strong>
+                        <p>@(string.IsNullOrWhiteSpace(Model.Major) ? "Not added yet" : Model.Major)</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="sb-profile-card sb-profile-card-dark">
+                <span>Profile strength</span>
+                <h2>Stand out in matches</h2>
+                <p>
+                    Complete your university, major, and about section to make your requests feel more personal.
+                </p>
+
+                <a asp-controller="Profile" asp-action="Edit">Improve profile</a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<style>
+    .sb-profile-page {
+        min-height: calc(100vh - 180px);
+        padding: 42px 0 86px;
+        background: #f7f8fb;
+    }
+
+        .sb-profile-page .container {
+            max-width: 1240px;
+        }
+
+    .sb-profile-alert {
+        border-radius: 8px;
+        border: 0;
+        margin-bottom: 18px;
+    }
+
+    .sb-profile-hero {
+        display: grid;
+        grid-template-columns: 118px minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: center;
+        padding: 30px;
+        border-radius: 8px;
+        background: #111827;
+        color: #ffffff;
+        box-shadow: 0 26px 80px rgba(17, 24, 39, 0.18);
+    }
+
+    .sb-profile-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 118px;
+        height: 118px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ff4f86, #2563eb);
+        color: #ffffff;
+        font-size: 42px;
+        font-weight: 900;
+        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+    }
+
+    .sb-profile-kicker,
+    .sb-profile-card span {
+        display: block;
+        color: #7dd3fc;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0;
+        margin-bottom: 8px;
+    }
+
+    .sb-profile-main h1 {
+        font-size: 52px;
+        font-weight: 900;
+        line-height: 1.04;
+        margin: 0 0 10px;
+    }
+
+    .sb-profile-main p {
+        max-width: 720px;
+        color: #d7deea;
+        font-size: 18px;
+        line-height: 1.55;
+        margin-bottom: 16px;
+    }
+
+    .sb-profile-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .sb-profile-tags span {
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+    .sb-profile-actions {
+        display: grid;
+        gap: 10px;
+        min-width: 170px;
+    }
+
+    .sb-profile-primary,
+    .sb-profile-secondary {
+        min-height: 48px;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: 900;
+    }
+
+    .sb-profile-primary {
+        background: #ff4f86;
+        color: #ffffff !important;
+        box-shadow: 0 16px 34px rgba(255, 79, 134, 0.28);
+    }
+
+    .sb-profile-secondary {
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff !important;
+    }
+
+    .sb-profile-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+        gap: 16px;
+        margin-top: 18px;
+    }
+
+    .sb-profile-card {
+        min-height: 220px;
+        padding: 24px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 16px 42px rgba(15, 23, 42, 0.07);
+    }
+
+    .sb-profile-card-dark {
+        background: #151f32;
+        color: #ffffff;
+    }
+
+    .sb-profile-card span {
+        color: #2563eb;
+    }
+
+    .sb-profile-card-dark span {
+        color: #7dd3fc;
+    }
+
+    .sb-profile-card h2 {
+        color: #111827;
+        font-size: 28px;
+        font-weight: 900;
+        margin: 0 0 14px;
+    }
+
+    .sb-profile-card-dark h2,
+    .sb-profile-card-dark p {
+        color: #ffffff;
+    }
+
+    .sb-profile-card p {
+        color: #64748b;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .sb-profile-card-dark p {
+        color: #d7deea;
+        margin-bottom: 20px;
+    }
+
+    .sb-profile-card-dark a {
+        color: #ff8fb3;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+    .sb-profile-detail-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+        .sb-profile-detail-list div {
+            padding: 14px;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .sb-profile-detail-list strong {
+            display: block;
+            color: #334155;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .sb-profile-detail-list p {
+            overflow-wrap: anywhere;
+        }
+
+    @@media (max-width: 992px) {
+        .sb-profile-hero {
+            grid-template-columns: 1fr;
+        }
+
+        .sb-profile-actions {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .sb-profile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .sb-profile-page {
+            padding-top: 22px;
+        }
+
+        .sb-profile-main h1 {
+            font-size: 38px;
+        }
+
+        .sb-profile-grid,
+        .sb-profile-detail-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

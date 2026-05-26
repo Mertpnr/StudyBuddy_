@@ -1,0 +1,117 @@
+﻿@model StudyBuddy.WEB.Models.Chat.ChatRoomViewModel
+
+@{
+    ViewData["Title"] = "Private Chat";
+}
+
+<section class="sb-page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-2">Private Chat</h1>
+        <p class="text-muted mb-0">Send messages to your matched study buddy.</p>
+    </div>
+</section>
+
+<section class="sb-section">
+    <div class="container">
+        <div class="sb-auth-card">
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <div id="chatBox" class="chat-box mb-4">
+                @if (Model.Messages == null || !Model.Messages.Any())
+                {
+                    <p class="text-muted mb-0">No messages yet. Start the conversation.</p>
+                }
+                else
+                {
+                    foreach (var message in Model.Messages)
+                    {
+                        var isMine = message.UserId == Model.CurrentUserId;
+
+                        <div class="d-flex mb-3 @(isMine ? "justify-content-end" : "justify-content-start")">
+                            <div class="chat-message @(isMine ? "chat-message-mine" : "chat-message-other")">
+                                <p class="mb-1">@message.Message</p>
+                                <small class="text-muted">
+                                    @message.Date.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                                </small>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <form asp-controller="Chat" asp-action="Create" method="post">
+                <input type="hidden" name="MatchRequestId" value="@Model.MatchRequestId" />
+                <input type="hidden" name="UserId" value="@Model.CurrentUserId" />
+
+                <div class="mb-3">
+                    <label class="form-label">Message</label>
+                    <textarea name="Message"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Write your message..."
+                              required></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="MatchRequest" asp-action="Index" class="btn sb-btn-outline">
+                        Back
+                    </a>
+
+                    <button type="submit" class="btn sb-btn-primary">
+                        Send
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .chat-box {
+        min-height: 320px;
+        max-height: 520px;
+        overflow-y: auto;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .chat-message {
+        max-width: 70%;
+        padding: 12px 14px;
+        border-radius: 8px;
+        word-break: break-word;
+    }
+
+    .chat-message-mine {
+        background: #2563eb;
+        color: white;
+    }
+
+        .chat-message-mine small {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+    .chat-message-other {
+        background: white;
+        border: 1px solid #e5e7eb;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const chatBox = document.getElementById("chatBox");
+
+        if (chatBox) {
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+}
