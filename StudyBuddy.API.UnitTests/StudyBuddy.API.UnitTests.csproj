@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudyBuddy.API\StudyBuddy.API.csproj" />
+    <ProjectReference Include="..\StudyBuddy.API\StudyBuddy.API\StudyBuddy.API.csproj" />
   </ItemGroup>
 
 </Project>

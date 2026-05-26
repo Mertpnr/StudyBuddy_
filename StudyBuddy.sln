@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyBuddy.WEB", "StudyBudd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyBuddy.API.UnitTests", "StudyBuddy.API.UnitTests\StudyBuddy.API.UnitTests.csproj", "{83C21C73-6F5C-45EA-A3F4-AF1C5074D8A7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyBuddy.API.IntegrationTests", "StudyBuddy.API.IntegrationTests\StudyBuddy.API.IntegrationTests.csproj", "{1067F06B-5086-44CC-A86A-62675575139F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{83C21C73-6F5C-45EA-A3F4-AF1C5074D8A7}.Release|x64.Build.0 = Release|Any CPU
 		{83C21C73-6F5C-45EA-A3F4-AF1C5074D8A7}.Release|x86.ActiveCfg = Release|Any CPU
 		{83C21C73-6F5C-45EA-A3F4-AF1C5074D8A7}.Release|x86.Build.0 = Release|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Debug|x64.Build.0 = Debug|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Debug|x86.Build.0 = Debug|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Release|x64.ActiveCfg = Release|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Release|x64.Build.0 = Release|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1067F06B-5086-44CC-A86A-62675575139F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

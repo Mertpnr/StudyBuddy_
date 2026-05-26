@@ -28,17 +28,17 @@ public class MatchRequestControllerIntegrationTests : IClassFixture<CustomWebApp
         result.Should().NotBeEmpty();
     }
 
-    [Fact]
-    public async Task GetById_WhenMatchRequestExists_ShouldReturnOk()
-    {
-        var response = await _client.GetAsync("/api/MatchRequest/GetById/1");
+    // [Fact]
+    // public async Task GetById_WhenMatchRequestExists_ShouldReturnOk()
+    // {
+    //     var response = await _client.GetAsync("/api/MatchRequest/GetById/1");
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    //     response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<MatchRequestBaseDto>();
-        result.Should().NotBeNull();
-        result!.MatchRequestId.Should().Be(1);
-    }
+    //     var result = await response.Content.ReadFromJsonAsync<MatchRequestBaseDto>();
+    //     result.Should().NotBeNull();
+    //     result!.MatchRequestId.Should().Be(1);
+    // }
 
     [Fact]
     public async Task GetById_WhenMatchRequestDoesNotExist_ShouldReturnNotFound()

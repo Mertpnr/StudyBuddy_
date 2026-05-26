@@ -15,7 +15,7 @@ public class MatchRequestServiceTests
 
     public MatchRequestServiceTests()
     {
-        _service = new MatchRequestService(_matchRequestRepositoryMock.Object, MapperTestHelper.CreateMapper());
+        _service = new MatchRequestService(_matchRequestRepositoryMock.Object);
     }
 
     [Fact]
@@ -42,7 +42,9 @@ public class MatchRequestServiceTests
         var result = await _service.GetMatchRequestByIdAsync(1);
 
         result.Should().NotBeNull();
-        result!.MatchRequestId.Should().Be(1);
+        result!.User1Id.Should().Be(1);
+        result.User2Id.Should().Be(2);
+        result.Status.Should().Be(0);
     }
 
     [Fact]

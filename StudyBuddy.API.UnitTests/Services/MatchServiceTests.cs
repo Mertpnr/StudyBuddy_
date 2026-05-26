@@ -16,7 +16,7 @@ public class MatchServiceTests
 
     public MatchServiceTests()
     {
-        _service = new MatchService(_matchRepositoryMock.Object, MapperTestHelper.CreateMapper());
+        _service = new MatchService(_matchRepositoryMock.Object);
     }
 
     [Fact]
@@ -43,7 +43,9 @@ public class MatchServiceTests
         var result = await _service.GetMatchByIdAsync(1);
 
         result.Should().NotBeNull();
-        result!.MatchId.Should().Be(1);
+        result!.User1Id.Should().Be(1);
+        result.User2Id.Should().Be(2);
+        result.MatchPercent.Should().Be(0.8m);
     }
 
     [Fact]

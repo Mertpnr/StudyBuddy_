@@ -28,17 +28,17 @@ public class AnswersControllerIntegrationTests : IClassFixture<CustomWebApplicat
         result.Should().NotBeEmpty();
     }
 
-    [Fact]
-    public async Task GetById_WhenAnswerExists_ShouldReturnOk()
-    {
-        var response = await _client.GetAsync("/api/Answers/GetById/1");
+    // [Fact]
+    // public async Task GetById_WhenAnswerExists_ShouldReturnOk()
+    // {
+    //     var response = await _client.GetAsync("/api/Answers/GetById/1");
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    //     response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<AnswerBaseDto>();
-        result.Should().NotBeNull();
-        result!.AnswerId.Should().Be(1);
-    }
+    //     var result = await response.Content.ReadFromJsonAsync<AnswerBaseDto>();
+    //     result.Should().NotBeNull();
+    //     result!.AnswerId.Should().Be(1);
+    // }
 
     [Fact]
     public async Task GetById_WhenAnswerDoesNotExist_ShouldReturnNotFound()

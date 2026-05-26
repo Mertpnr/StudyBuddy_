@@ -42,7 +42,9 @@ public class OptionServiceTests
         var result = await _service.GetOptionByIdAsync(1);
 
         result.Should().NotBeNull();
-        result!.OptionId.Should().Be(1);
+        result!.QuestionId.Should().Be(1);
+        result.Text.Should().Be("Morning");
+        result.Value.Should().Be(1m);
     }
 
     [Fact]
@@ -88,7 +90,7 @@ public class OptionServiceTests
     public async Task DeleteOptionAsync_WhenOptionExists_ShouldDeleteAndReturnTrue()
     {
         _optionRepositoryMock.Setup(x => x.GetById(1))
-            .ReturnsAsync(new Option { OptionId = 1 });
+            .ReturnsAsync(new Option {OptionId = 1, QuestionId = 1, Text = "Math", Value = 1m, OrderNo = 1});
 
         _optionRepositoryMock.Setup(x => x.Delete(1))
             .ReturnsAsync(true);

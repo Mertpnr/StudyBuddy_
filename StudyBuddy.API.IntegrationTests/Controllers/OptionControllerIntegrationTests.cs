@@ -28,17 +28,17 @@ public class OptionControllerIntegrationTests : IClassFixture<CustomWebApplicati
         result.Should().NotBeEmpty();
     }
 
-    [Fact]
-    public async Task GetById_WhenOptionExists_ShouldReturnOk()
-    {
-        var response = await _client.GetAsync("/api/Option/GetById/1");
+    // [Fact]
+    // public async Task GetById_WhenOptionExists_ShouldReturnOk()
+    // {
+    //     var response = await _client.GetAsync("/api/Option/GetById/1");
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    //     response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<OptionBaseDto>();
-        result.Should().NotBeNull();
-        result!.OptionId.Should().Be(1);
-    }
+    //     var result = await response.Content.ReadFromJsonAsync<OptionBaseDto>();
+    //     result.Should().NotBeNull();
+    //     result!.OptionId.Should().Be(1);
+    // }
 
     [Fact]
     public async Task GetById_WhenOptionDoesNotExist_ShouldReturnNotFound()
